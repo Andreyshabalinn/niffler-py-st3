@@ -8,7 +8,7 @@ class SignupPage(LoginPage):
         self.signup_button = page.get_by_role("button", name="Sign up")
         self.signin_button_link = page.get_by_role("link", name="Sign in")
 
-    def signup(self, username, password):
+    def signup(self, username: str, password: str):
         self.username_input.fill(username)
         self.password_input.fill(password)
         self.password_submit_input.fill(password)

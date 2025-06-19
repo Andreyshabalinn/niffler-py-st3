@@ -26,6 +26,7 @@ def test_add_profile_category(page: Page, signin_user):
     profile_page = ProfilePage(page)
     profile_page.add_category(category_name)
     assert page.locator("span", has_text=category_name).is_visible()
+    profile_page.archive_category(category_name)
 
 def test_add_invalid_profile_category(page: Page, signin_user):
     page.goto(f"{base_url}profile")
@@ -38,24 +39,23 @@ def test_add_invalid_profile_category(page: Page, signin_user):
     assert page.locator("span", has_text="Allowed category length is from 2 to 50 symbols").is_visible()
 
 
+
 def test_archive_category(page: Page, signin_user):
 
     category_name, _ = create_category(signin_user)
 
     page.goto(f"{base_url}profile")
 
-    category = page.locator("div.MuiBox-root", has=page.locator("span", has_text=category_name))
-    category.locator('button[aria-label="Archive category"]').click()
-    dialog = page.get_by_role("dialog")
-    dialog.wait_for()
-    dialog.get_by_role("button", name="Archive").click()
-    page.get_by_text(f"Category {category_name} is archived").wait_for()
+    profile_page = ProfilePage(page)
+
+    profile_page.archive_category(category_name)
 
     assert page.locator("span", has_text=category_name).is_hidden()
     page.get_by_label("Show archived").check()
     assert page.locator("span", has_text=category_name).is_visible()
 
 
+#Добавить page object
 def test_edit_category(page: Page, signin_user):
 
     category_name, category_id = create_category(signin_user)
@@ -63,21 +63,19 @@ def test_edit_category(page: Page, signin_user):
     page.goto(f"{base_url}profile")
 
     new_category_name = fake.word()
+    profile_page = ProfilePage(page)
+    profile_page.edit_category(category_name, new_category_name)
 
-    category = page.locator("div.MuiBox-root", has=page.locator("span", has_text=category_name))
-    category.locator('button[aria-label="Edit category"]').click()
+    # category = page.locator("div.MuiBox-root", has=page.locator("span", has_text=category_name))
+    # category.locator('button[aria-label="Edit category"]').click()
 
-    category_field = page.get_by_placeholder("Edit category")
-    category_field.fill(new_category_name)
-    category_field.press("Enter")
+    # category_field = page.get_by_placeholder("Edit category")
+    # category_field.fill(new_category_name)
+    # category_field.press("Enter")
 
-    page.get_by_text(f"Category name is changed").wait_for()
+    # page.get_by_text(f"Category name is changed").wait_for()
 
     assert page.locator("span", has_text=new_category_name).is_visible()
 
     archive_category(new_category_name, category_id)
 
-    
-    
-
-    

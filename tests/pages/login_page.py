@@ -7,7 +7,7 @@ class LoginPage(BasePage):
         self.password_input = page.get_by_placeholder("Type your password")
         self.login_button = page.get_by_role("button", name="Log in")
 
-    def login(self, username, password):
+    def login(self, username: str, password: str):
         self.username_input.fill(username)
         self.password_input.fill(password)
         self.login_button.click()

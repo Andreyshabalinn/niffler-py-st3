@@ -9,8 +9,13 @@ class SpendingsPage(MainPage):
         self.date_calendar = page.get_by_label("Date")
         self.description_input = page.locator("#description")
         self.add_spending_button = page.get_by_role("button", name="Add")
+        self.delete_spending_button = page.locator("#delete")
+        self.delete_spending_dialog = page.get_by_role("dialog")
+        self.delete_spending_dialog_button = self.delete_spending_dialog.get_by_role("button", name="Delete")
+        self.delete_spending_popup = page.get_by_text(f"Spendings succesfully deleted")
+        
 
-    def add_spending(self, spending_amount, spending_currency, spending_category, spending_date, spending_description):
+    def add_spending(self, spending_amount: str, spending_currency: str, spending_category: str, spending_date: str, spending_description: str):
 
         self.add_spending_button_link.click()
         self.page.wait_for_url("http://frontend.niffler.dc/spending")
@@ -39,3 +44,18 @@ class SpendingsPage(MainPage):
         self.add_spending_button.click()
 
         self.success_add_spending_popup.wait_for()
+
+
+    def delete_spending(self, category_name: str, spend_amount: str, spend_date: str):
+        row = self.page.locator(
+        f'tr:has(span:has-text("{category_name}")):has(span:has-text("{spend_amount}")):has(span:has-text("{spend_date}"))')
+        row.click()
+        self.delete_spending_button.click()
+        self.delete_spending_dialog.wait_for()
+        self.delete_spending_dialog_button.click()
+
+        self.delete_spending_popup.wait_for()
+        
+        return row
+    
+

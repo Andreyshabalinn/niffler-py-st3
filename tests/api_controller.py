@@ -14,7 +14,7 @@ token = os.getenv("TOKEN")
 base_url = os.getenv("API_BASE_URL")
 
 
-def archive_category(category_name, category_id):
+def archive_category(category_name: str, category_id: str):
 
     headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
     username= "asd"
@@ -47,7 +47,7 @@ def create_category(signin_user):
     time.sleep(10)
     return category_name, category_id
 
-def create_spending(signin_user, spend_amount, spend_category, spend_currency, spend_date, spend_description):
+def create_spending(signin_user: str, spend_amount: str, spend_category: str, spend_currency: str, spend_date: str, spend_description: str):
   headers = {"Authorization": f"Bearer {token}", "Accept": "*/*", "Content-Type": "application/json"}
   username, _ = signin_user
   spend_amount = spend_amount
@@ -72,6 +72,4 @@ def create_spending(signin_user, spend_amount, spend_category, spend_currency, s
   result = requests.post(f"{base_url}spends/add", json=data, headers=headers)
   print(result.request.body)
   assert result.status_code == 201, result.request.body
-
-# Создание траты API
-# Удаление траты API
+  

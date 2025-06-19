@@ -21,7 +21,7 @@ def create_user(page: Page):
     username = global_user#fake.user_name()
     password = global_password#fake.password()
 
-    # Первый раз надо раскомментировать и создать пользователя
+    # Первый раз надо раскомментировать и создать пользователя 
     # signup_page = SignupPage(page)
     # signup_page.signup(username, password)
 
@@ -58,7 +58,7 @@ def created_category(signin_user):
     
 
 @pytest.fixture(scope="function")
-def page():
+def page()->Page:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context()
