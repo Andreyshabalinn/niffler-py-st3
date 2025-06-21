@@ -2,3 +2,4 @@ pytest
 pytest-playwright
 playwright
 faker
+dotenv

@@ -12,6 +12,9 @@ load_dotenv()
 
 base_url = os.getenv("BASE_URL")
 
+def load():
+    pass
+
 # #Создание траты
 def test_create_spend(page: Page, signin_user):
 
@@ -28,8 +31,7 @@ def test_create_spend(page: Page, signin_user):
 
     row = page.locator(
     f'tr:has(span:has-text("{spending_category}")):has(span:has-text("{spending_amount}")):has(span:has-text("{spending_date}"))')
-
-    assert row.is_visible()
+    row.wait_for()
 
 
     spendings_page.delete_spending(spending_category, spending_amount, spending_date)

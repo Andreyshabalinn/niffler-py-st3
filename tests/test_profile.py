@@ -66,15 +66,6 @@ def test_edit_category(page: Page, signin_user):
     profile_page = ProfilePage(page)
     profile_page.edit_category(category_name, new_category_name)
 
-    # category = page.locator("div.MuiBox-root", has=page.locator("span", has_text=category_name))
-    # category.locator('button[aria-label="Edit category"]').click()
-
-    # category_field = page.get_by_placeholder("Edit category")
-    # category_field.fill(new_category_name)
-    # category_field.press("Enter")
-
-    # page.get_by_text(f"Category name is changed").wait_for()
-
     assert page.locator("span", has_text=new_category_name).is_visible()
 
     archive_category(new_category_name, category_id)

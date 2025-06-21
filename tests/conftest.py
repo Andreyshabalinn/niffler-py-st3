@@ -11,12 +11,15 @@ load_dotenv()
 fake = Faker()
 
 
-global_user = "asd"
-global_password = "asd"
+global_user = os.getenv("TEST_LOGIN")
+global_password = os.getenv("TEST_PASSWORD")
+
+auth_url = os.getenv("BASE_AUTH_URL")
+base_url = os.getenv("BASE_URL")
 
 @pytest.fixture(scope="function")
 def create_user(page: Page):
-    page.goto("http://auth.niffler.dc:9000/register") 
+    page.goto(f"{auth_url}register") 
 
     username = global_user#fake.user_name()
     password = global_password#fake.password()
@@ -36,7 +39,7 @@ def create_user(page: Page):
 def signin_user(page: Page, create_user):
 
     username, password = create_user
-    page.goto("http://auth.niffler.dc:9000/login") 
+    page.goto(f"{auth_url}login") 
 
 
     page.get_by_placeholder("Type your username").fill(username)
@@ -45,7 +48,7 @@ def signin_user(page: Page, create_user):
     page.get_by_role("button", name="Log in").click()
 
 
-    page.wait_for_url("http://frontend.niffler.dc/main")
+    page.wait_for_url(f"{base_url}main")
 
     yield username, password
 
@@ -60,7 +63,7 @@ def created_category(signin_user):
 @pytest.fixture(scope="function")
 def page()->Page:
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
         yield page
