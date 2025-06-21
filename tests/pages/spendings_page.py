@@ -13,6 +13,9 @@ class SpendingsPage(MainPage):
         self.delete_spending_dialog = page.get_by_role("dialog")
         self.delete_spending_dialog_button = self.delete_spending_dialog.get_by_role("button", name="Delete")
         self.delete_spending_popup = page.get_by_text(f"Spendings succesfully deleted")
+        self.select_all_rows_checkbox = page.get_by_role("checkbox", name="select all rows")
+        self.no_spendings_text = page.locator("p.MuiTypography-h6", has_text="There are no spendings")
+        
         
 
     def add_spending(self, spending_amount: str, spending_currency: str, spending_category: str, spending_date: str, spending_description: str):
@@ -58,4 +61,14 @@ class SpendingsPage(MainPage):
         
         return row
     
+    def delete_all_spending(self):
+        self.select_all_rows_checkbox.click()
+        self.delete_spending_button.click()
+        self.delete_spending_dialog.wait_for()
+        self.delete_spending_dialog_button.click()
+
+        self.no_spendings_text.wait_for()
+        self.delete_spending_popup.wait_for()
+
+
 
