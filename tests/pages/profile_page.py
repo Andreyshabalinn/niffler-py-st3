@@ -1,4 +1,5 @@
 from .base_page import BasePage
+from playwright.sync_api import Locator
 
 class ProfilePage(BasePage):
     def __init__(self, page):
@@ -13,12 +14,18 @@ class ProfilePage(BasePage):
         self.is_archive_include_checkbox = page.get_by_label("Show archived")
         self.edit_category_input = page.get_by_placeholder("Edit category")
         self.category_succes_edit_popup = page.get_by_text(f"Category name is changed")
+        self.name_len_error = page.get_by_text("Fullname length has to be not longer that 50 symbols")
+        self.category_max_length_error = page.locator("span", has_text="Allowed category length is from 2 to 50 symbols")
+    
+    def category_by_name(self, category_name: str)->Locator:
+        return self.page.locator("span", has_text=category_name)
 
+    
 
     def change_profile_name(self, profile_name: str):
         self.profile_name_input.fill(profile_name)
         self.save_changes_button.click()
-        self.profile_success_update_popup.wait_for()
+        
     
     def add_category(self, category_name: str):
         self.category_name_input.fill(category_name)

@@ -1,3 +1,4 @@
+from typing import Tuple
 from playwright.sync_api import Page
 from faker import Faker
 from pages.login_page import LoginPage
@@ -12,7 +13,7 @@ base_url = os.getenv("BASE_URL")
 
 
 
-def test_successful_signin(page: Page, create_user):
+def test_successful_signin(page: Page, create_user:Tuple[str, str]):
 
      user, password = create_user
 
@@ -49,7 +50,7 @@ def test_try_signup_on_already_exsist_creds(page: Page):
 
     signup_page.signup(username, password)
 
-    page.locator("span.form__error", has_text=f"Username `{username}` already exists").wait_for()
+    signup_page.user_already_exists_span(username).wait_for()
 
 def test_try_signup_with_invalid_username(page: Page):
     page.goto(f"{base_auth_url}register")

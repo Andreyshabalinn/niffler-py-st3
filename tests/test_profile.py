@@ -17,6 +17,15 @@ def test_edit_profile_name(page: Page, signin_user):
     page.goto(f"{base_url}profile")
     profile_page = ProfilePage(page)
     profile_page.change_profile_name(user)
+    profile_page.profile_success_update_popup.wait_for()
+
+def test_edit_invalid_profile_name(page: Page, signin_user):
+
+    page.goto(f"{base_url}profile")
+    profile_page = ProfilePage(page)
+    profile_page.change_profile_name(fake.pystr(min_chars=51, max_chars=51))
+    assert profile_page.name_len_error.is_visible()
+
 
 
 def test_add_profile_category(page: Page, signin_user):
@@ -25,7 +34,7 @@ def test_add_profile_category(page: Page, signin_user):
     category_name = fake.word()
     profile_page = ProfilePage(page)
     profile_page.add_category(category_name)
-    assert page.locator("span", has_text=category_name).is_visible()
+    assert profile_page.category_by_name(category_name).is_visible()
     profile_page.archive_category(category_name)
 
 def test_add_invalid_profile_category(page: Page, signin_user):
@@ -35,8 +44,8 @@ def test_add_invalid_profile_category(page: Page, signin_user):
     profile_page = ProfilePage(page)
     profile_page.category_name_input.fill(category_name)
     profile_page.category_name_input.press("Enter")
-    assert page.locator("span", has_text=category_name).is_hidden()
-    assert page.locator("span", has_text="Allowed category length is from 2 to 50 symbols").is_visible()
+    assert profile_page.category_by_name(category_name).is_hidden()
+    assert profile_page.category_max_length_error.is_visible()
 
 
 
@@ -50,9 +59,9 @@ def test_archive_category(page: Page, signin_user):
 
     profile_page.archive_category(category_name)
 
-    assert page.locator("span", has_text=category_name).is_hidden()
-    page.get_by_label("Show archived").check()
-    assert page.locator("span", has_text=category_name).is_visible()
+    assert profile_page.category_by_name(category_name).is_hidden()
+    profile_page.is_archive_include_checkbox.check()
+    assert profile_page.category_by_name(category_name).is_visible()
 
 
 #Добавить page object
@@ -66,7 +75,7 @@ def test_edit_category(page: Page, signin_user):
     profile_page = ProfilePage(page)
     profile_page.edit_category(category_name, new_category_name)
 
-    assert page.locator("span", has_text=new_category_name).is_visible()
+    assert profile_page.category_by_name(category_name).is_visible()
 
     archive_category(new_category_name, category_id)
 

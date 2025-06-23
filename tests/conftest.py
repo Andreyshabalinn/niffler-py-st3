@@ -1,3 +1,4 @@
+from typing import Tuple
 import pytest
 from playwright.sync_api import sync_playwright
 from playwright.sync_api import Page
@@ -18,7 +19,7 @@ auth_url = os.getenv("BASE_AUTH_URL")
 base_url = os.getenv("BASE_URL")
 
 @pytest.fixture(scope="function")
-def create_user(page: Page):
+def create_user(page: Page)->Tuple[str, str]:
     page.goto(f"{auth_url}register") 
 
     username = global_user#fake.user_name()
@@ -36,7 +37,7 @@ def create_user(page: Page):
 
 
 @pytest.fixture(scope="function")
-def signin_user(page: Page, create_user):
+def signin_user(page: Page, create_user:Tuple[str, str])->Tuple[str, str]:
 
     username, password = create_user
     page.goto(f"{auth_url}login") 
@@ -54,7 +55,7 @@ def signin_user(page: Page, create_user):
 
 
 @pytest.fixture(scope="function")
-def created_category(signin_user):
+def created_category(signin_user:Tuple[str, str])->Tuple[str, str]:
     category_name, category_id = create_category(signin_user=signin_user)
     yield category_name, category_id
     archive_category(category_name, category_id)

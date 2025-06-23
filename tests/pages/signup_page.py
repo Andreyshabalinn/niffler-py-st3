@@ -1,5 +1,5 @@
-from .base_page import BasePage
 from .login_page import LoginPage
+from playwright.sync_api import Locator
 
 class SignupPage(LoginPage):
     def __init__(self, page):
@@ -10,6 +10,10 @@ class SignupPage(LoginPage):
         self.signup_username_len_error = page.locator("span.form__error", has_text=f"Allowed username length should be from 3 to 50 characters")
         self.signup_unmatched_passwords_error = page.locator("span.form__error", has_text=f"Passwords should be equal")
         self.signup_password_len_error = page.locator("span.form__error", has_text=f"Allowed password length should be from 3 to 12 characters").first
+
+    
+    def user_already_exists_span(self, username:str)->Locator:
+        return self.page.locator("span.form__error", has_text=f"Username `{username}` already exists")
 
         
 
