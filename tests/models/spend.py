@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import UUID
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 from sqlmodel import Field
@@ -6,7 +7,7 @@ from sqlalchemy.sql import quoted_name
 
 class Category(SQLModel, table=True):
     __tablename__ = "category"
-    id: str = Field(primary_key=True)
+    id: UUID = Field(primary_key=True)
     name: str
     username: str
     archived: bool
