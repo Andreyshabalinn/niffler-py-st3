@@ -5,6 +5,7 @@ import requests
 from faker import Faker
 from dotenv import load_dotenv
 import os
+from tests.models.spend import Category, SpendCreate
 
 load_dotenv()
 
@@ -45,7 +46,8 @@ def create_category(signin_user)->Tuple[str, str]:
     print(f"Категория {category_name} успешно создана")
     category_id = result.json()['id']
     time.sleep(10)
-    return category_name, category_id
+    result_model = Category.model_validate(result.json())
+    return result_model.name, result_model.id
 
 def create_spending(signin_user: str, spend_amount: str, spend_category: str, spend_currency: str, spend_date: str, spend_description: str):
   headers = {"Authorization": f"Bearer {token}", "Accept": "*/*", "Content-Type": "application/json"}
@@ -72,7 +74,8 @@ def create_spending(signin_user: str, spend_amount: str, spend_category: str, sp
   result = requests.post(f"{base_url}spends/add", json=data, headers=headers)
   print(result.request.body)
   assert result.status_code == 201, result.request.body
-  return result.json()
+  result_model = SpendCreate.model_validate(result.json())
+  return result_model
   
 
 def delete_spending(spending_id: str):
