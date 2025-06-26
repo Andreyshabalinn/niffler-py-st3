@@ -1,11 +1,9 @@
 from playwright.sync_api import Page
 from faker import Faker
-from conftest import archive_category, create_category
 fake = Faker()
 from pages.profile_page import ProfilePage
 from dotenv import load_dotenv
 import os
-from database.spend_db import SpendDb
 load_dotenv()
 
 base_url = os.getenv("BASE_URL")

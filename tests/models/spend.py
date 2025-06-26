@@ -27,7 +27,7 @@ class Spend(SQLModel, table=True):
 
 class SpendCreate(SQLModel):
     id: str
-    spend_date: datetime
+    spendDate: datetime
     currency: str
     amount: float
     description: str

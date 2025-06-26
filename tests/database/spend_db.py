@@ -19,11 +19,15 @@ class SpendDb:
             category = session.get(Category, category_id)
             session.delete(category)
             session.commit()
+            
     def delete_category_by_name(self, category_name: str):
         with Session(self.engine) as session:
-            category = session.get(Category, category_name)
-            session.delete(category)
-            session.commit()
+            statement = select(Category).where(Category.name == category_name)
+            category = session.exec(statement).first()
+
+            if category:
+                session.delete(category)
+                session.commit()
     
     def delete_spend(self, category_id: int):
         with Session(self.engine) as session:
