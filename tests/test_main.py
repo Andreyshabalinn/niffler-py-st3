@@ -49,17 +49,9 @@ def test_create_invalid_spend(page: Page, signin_user):
     # Проверяем что span с ошибкой есть
     assert spendings_page.spending_amount_error.is_visible()
 
-def test_delete_spend(page: Page, signin_user):
-    # Входные данные для создаваемой траты
-    spend_amount = fake.random_int(min=10, max=10000)
-    spend_description = fake.word()
-    spend_currency = "KZT"
-    category_name = fake.word()
-    now = datetime.now(timezone.utc)
-    spend_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
-
+def test_delete_spend(page: Page, created_spend):
     # Создаём трату
-    create_spending(signin_user, spend_amount,category_name, spend_currency, spend_date, spend_description)
+    created_spend
     today = date.today()
     spend_date = str(today.day)
 
@@ -68,31 +60,16 @@ def test_delete_spend(page: Page, signin_user):
 
     # Удаляем трату
     spending_page = SpendingsPage(page)
-    row = spending_page.delete_spending(category_name, spend_amount, spend_date)
+    row = spending_page.delete_spending(created_spend['category']['name'], int(created_spend['amount']), spend_date)
     assert row.is_hidden()
 
     # Удаляем категорию
     page.goto(f"{base_url}profile")
     profile_page = ProfilePage(page)
-    profile_page.archive_category(category_name)
+    profile_page.archive_category(created_spend['category']['name'])
 
 
-def test_delete_all_spends(page: Page, signin_user):
-    # Входные данные для создаваемых трат
-    spend_amount = fake.random_int(min=10, max=10000)
-    spend_description = fake.word()
-    spend_currency = "KZT"
-    category_name = fake.word()
-    now = datetime.now(timezone.utc)
-    spend_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
-
-    # Создаём траты
-    create_spending(signin_user, spend_amount,category_name, spend_currency, spend_date, spend_description)
-    create_spending(signin_user, spend_amount,category_name, spend_currency, spend_date, spend_description)
-
-    page.reload()
-    time.sleep(2)
-
+def test_delete_all_spends(page: Page, created_spend):
     # Удаляем все траты
     spending_page = SpendingsPage(page)
     spending_page.delete_all_spending()
@@ -102,23 +79,13 @@ def test_delete_all_spends(page: Page, signin_user):
     # Удаляем категории
     page.goto(f"{base_url}profile")
     profile_page = ProfilePage(page)
-    profile_page.archive_category(category_name)
+    profile_page.archive_category(created_spend['category']['name'])
 
 
-# Успешное редактирование траты
-def test_edit_spend(page: Page, signin_user):
-
+# # Успешное редактирование траты
+def test_edit_spend(page: Page, created_spend):
     # Входные данные для создаваемой траты
-    spending_amount = str(fake.random_int(min=10, max=10000))
-    spending_currency = "KZT"
-    spending_category = fake.word()
-    now = datetime.now(timezone.utc)
-    spending_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
-    spending_description = fake.word()
     
-    # Создаём трату через API
-    created_spending = create_spending(signin_user, spending_amount,spending_category, spending_currency, spending_date, spending_description)
-
     page.reload()
     time.sleep(2)
 
@@ -133,26 +100,18 @@ def test_edit_spend(page: Page, signin_user):
 
     # Редактируем трату
     spendings_page = SpendingsPage(page)  
-    spendings_page.edit_spending(spending_category, spending_day, spending_description, new_spending_amount, new_spending_currency, new_spending_category, new_spending_date, new_spending_description)
+    spendings_page.edit_spending(created_spend['category']['name'], spending_day, created_spend['description'], new_spending_amount, new_spending_currency, new_spending_category, new_spending_date, new_spending_description)
 
     # Удаляем трату и категорию
     page.goto(f"{base_url}profile")
-    delete_spending(created_spending['id'])
+    delete_spending(created_spend['id'])
     profile_page = ProfilePage(page)
-    profile_page.archive_category(spending_category)
+    profile_page.archive_category(created_spend['category']['name'])
 
-# Редактирование траты с ошибкой
-def test_edit_spend_with_error(page: Page, signin_user):
+def test_edit_spend_with_error(page: Page, created_spend):
 
-    spending_amount = str(fake.random_int(min=10, max=10000))
-    spending_currency = "KZT"
-    spending_category = fake.word()
     now = datetime.now(timezone.utc)
     spending_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
-    spending_description = fake.word()
-    
-     
-    created_spending = create_spending(signin_user, spending_amount,spending_category, spending_currency, spending_date, spending_description)
 
     page.reload()
     time.sleep(2)
@@ -162,31 +121,29 @@ def test_edit_spend_with_error(page: Page, signin_user):
     spending_date = str(today.day)
 
     spendings_page = SpendingsPage(page) 
-    spendings_page.edit_invalid_spending(spending_category, spending_date, spending_description, new_spending_amount)
+    spendings_page.edit_invalid_spending(created_spend['category']['name'], spending_date, created_spend['description'], new_spending_amount)
     assert spendings_page.spending_amount_error.is_visible()
 
     # Удаляем трату и категорию
     page.goto(f"{base_url}profile")
-    delete_spending(created_spending['id'])
     profile_page = ProfilePage(page)
-    profile_page.archive_category(spending_category)
+    profile_page.archive_category(created_spend['category']['name'])
 
 
 
 # Поиск по строке
-def test_search_spending_by_category(page: Page, signin_user):
+def test_search_spending_by_category(page: Page, created_spend, signin_user):
     # Входные данные для создаваемых трат
     spend_amount = fake.random_int(min=10, max=10000)
     spend_description = fake.word()
-    spend_currency = "KZT"
-    category_name = fake.word()
-    another_category_name = fake.word()+"Test"
+    another_currency = "RUB"
+    another_category = fake.word()+"Test"
     now = datetime.now(timezone.utc)
     spend_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
     # Создаём траты
-    spedn_one = create_spending(signin_user, spend_amount,category_name, spend_currency, spend_date, spend_description)
-    spend_two = create_spending(signin_user, spend_amount,another_category_name, spend_currency, spend_date, spend_description)
+    spend_one = created_spend
+    spend_two = create_spending(signin_user, spend_amount,another_category, another_currency, spend_date, spend_description)
 
     spending_day = str(date.today().day)
 
@@ -195,36 +152,34 @@ def test_search_spending_by_category(page: Page, signin_user):
 
     # Удаляем все траты
     spending_page = SpendingsPage(page)
-    spending_page.search_spending_by_category(category_name)
+    spending_page.search_spending_by_category(spend_one['category']['name'])
 
-    expected_row = spending_page.spending_row(category_name, spend_amount, spending_day)
-    another_row = spending_page.spending_row(another_category_name, spend_amount, spending_day)
+    expected_row = spending_page.spending_row(spend_one['category']['name'], int(spend_one['amount']), spending_day)
+    another_row = spending_page.spending_row(spend_two['category']['name'], spend_amount, spending_day)
     assert expected_row.is_visible()
     assert another_row.is_hidden()
 
     # Удаляем трату и категорию
     page.goto(f"{base_url}profile")
-    delete_spending(spedn_one['id'])
-    delete_spending(spend_two['id'])
     profile_page = ProfilePage(page)
-    profile_page.archive_category(category_name)
-    profile_page.archive_category(another_category_name)
+    delete_spending(spend_two['id'])
+    profile_page.archive_category(spend_one['category']['name'])
+    profile_page.archive_category(another_category)
 
 
 # Поиск по строке
-def test_search_spending_by_category(page: Page, signin_user):
+def test_search_spending_by_currency(page: Page, created_spend, signin_user):
     # Входные данные для создаваемых трат
     spend_amount = fake.random_int(min=10, max=10000)
     spend_description = fake.word()
     spend_currency = "KZT"
     another_currency = "RUB"
-    category_name = fake.word()
     another_category = fake.word()+"Test"
     now = datetime.now(timezone.utc)
     spend_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
     # Создаём траты
-    spedn_one = create_spending(signin_user, spend_amount,category_name, spend_currency, spend_date, spend_description)
+    spend_one = created_spend
     spend_two = create_spending(signin_user, spend_amount,another_category, another_currency, spend_date, spend_description)
 
     spending_day = str(date.today().day)
@@ -236,17 +191,16 @@ def test_search_spending_by_category(page: Page, signin_user):
     spending_page = SpendingsPage(page)
     spending_page.search_spending_by_currency(spend_currency)
 
-    expected_row = spending_page.spending_row(category_name, spend_amount, spending_day)
-    another_row = spending_page.spending_row(another_category, spend_amount, spending_day)
+    expected_row = spending_page.spending_row(spend_one['category']['name'], int(spend_one['amount']), spending_day)
+    another_row = spending_page.spending_row(spend_two['category']['name'], spend_amount, spending_day)
     assert expected_row.is_visible()
     assert another_row.is_hidden()
 
     # Удаляем трату и категорию
     page.goto(f"{base_url}profile")
-    delete_spending(spedn_one['id'])
-    delete_spending(spend_two['id'])
     profile_page = ProfilePage(page)
-    profile_page.archive_category(category_name)
+    delete_spending(spend_two['id'])
+    profile_page.archive_category(spend_one['category']['name'])
     profile_page.archive_category(another_category)
 
 

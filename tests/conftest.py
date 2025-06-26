@@ -1,10 +1,10 @@
+from datetime import datetime, timezone
 from typing import Tuple
 import pytest
 from playwright.sync_api import sync_playwright
 from playwright.sync_api import Page
 from faker import Faker
-from tests.pages.signup_page import SignupPage
-from database.spend_db import SpendDb
+from api_controller import create_spending, delete_spending
 from dotenv import load_dotenv
 import os
 from api_controller import create_category, archive_category
@@ -63,7 +63,21 @@ def created_category(signin_user:Tuple[str, str])->Tuple[str, str]:
     yield category_name, category_id
 
 
+@pytest.fixture(scope="function")
+def created_spend(signin_user):
+    # Входные данные для создаваемых трат
+    spend_amount = fake.random_int(min=10, max=10000)
+    spend_description = fake.word()
+    spend_currency = "KZT"
+    category_name = fake.word()
+    now = datetime.now(timezone.utc)
+    spend_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    created_spend = create_spending(signin_user, spend_amount,category_name, spend_currency, spend_date, spend_description)
+    # Создаём траты
+    yield created_spend
 
+    delete_spending(created_spend['id'])
+    
     
 
 @pytest.fixture(scope="function")
