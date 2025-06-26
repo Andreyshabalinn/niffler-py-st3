@@ -49,9 +49,9 @@ def test_add_invalid_profile_category(page: Page, signin_user):
 
 
 
-def test_archive_category(page: Page, signin_user):
+def test_archive_category(page: Page, created_category):
 
-    category_name, _ = create_category(signin_user)
+    category_name, _ = created_category
 
     page.goto(f"{base_url}profile")
 
@@ -65,9 +65,9 @@ def test_archive_category(page: Page, signin_user):
 
 
 #Добавить page object
-def test_edit_category(page: Page, signin_user):
+def test_edit_category(page: Page, created_category):
 
-    category_name, category_id = create_category(signin_user)
+    category_name, category_id = created_category
 
     page.goto(f"{base_url}profile")
 

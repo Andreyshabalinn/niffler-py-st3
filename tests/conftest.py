@@ -3,10 +3,12 @@ import pytest
 from playwright.sync_api import sync_playwright
 from playwright.sync_api import Page
 from faker import Faker
-from pages.signup_page import SignupPage
+from tests.pages.signup_page import SignupPage
+from database.spend_db import SpendDb
 from dotenv import load_dotenv
 import os
 from api_controller import create_category, archive_category
+
 
 load_dotenv()
 fake = Faker()
@@ -17,6 +19,7 @@ global_password = os.getenv("TEST_PASSWORD")
 
 auth_url = os.getenv("BASE_AUTH_URL")
 base_url = os.getenv("BASE_URL")
+db_url = os.getenv("DB_URL")
 
 @pytest.fixture(scope="function")
 def create_user(page: Page)->Tuple[str, str]:
@@ -58,7 +61,9 @@ def signin_user(page: Page, create_user:Tuple[str, str])->Tuple[str, str]:
 def created_category(signin_user:Tuple[str, str])->Tuple[str, str]:
     category_name, category_id = create_category(signin_user=signin_user)
     yield category_name, category_id
-    archive_category(category_name, category_id)
+
+
+
     
 
 @pytest.fixture(scope="function")
