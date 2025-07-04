@@ -1,6 +1,5 @@
 from playwright.sync_api import Page
 from faker import Faker
-from conftest import archive_category, create_category
 fake = Faker()
 from pages.profile_page import ProfilePage
 from dotenv import load_dotenv
@@ -8,7 +7,6 @@ import os
 load_dotenv()
 
 base_url = os.getenv("BASE_URL")
-
 
 
 def test_edit_profile_name(page: Page, signin_user):
@@ -75,7 +73,5 @@ def test_edit_category(page: Page, created_category):
     profile_page = ProfilePage(page)
     profile_page.edit_category(category_name, new_category_name)
 
-    assert profile_page.category_by_name(category_name).is_visible()
-
-    archive_category(new_category_name, category_id)
+    assert profile_page.category_by_name(new_category_name).is_visible()
 

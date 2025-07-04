@@ -4,10 +4,10 @@ import pytest
 from playwright.sync_api import sync_playwright
 from playwright.sync_api import Page
 from faker import Faker
-from api_controller import create_spending, delete_spending
 from dotenv import load_dotenv
 import os
-from api_controller import create_category, archive_category
+from tests.api_controller import create_category, create_spending, delete_spending
+from tests.database.spend_db import SpendDb
 
 
 load_dotenv()
@@ -61,6 +61,8 @@ def signin_user(page: Page, create_user:Tuple[str, str])->Tuple[str, str]:
 def created_category(signin_user:Tuple[str, str])->Tuple[str, str]:
     category_name, category_id = create_category(signin_user=signin_user)
     yield category_name, category_id
+    db_client = SpendDb(db_url)
+    db_client.delete_category(category_id)
 
 
 @pytest.fixture(scope="function")
@@ -76,7 +78,9 @@ def created_spend(signin_user):
     # Создаём траты
     yield created_spend
 
-    delete_spending(created_spend['id'])
+    delete_spending(created_spend.id)
+    db_client = SpendDb(db_url)
+    db_client.delete_category(created_spend.category.id)
     
     
 

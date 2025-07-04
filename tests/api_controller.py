@@ -5,6 +5,7 @@ import requests
 from faker import Faker
 from dotenv import load_dotenv
 import os
+from tests.models.spend import Category, SpendCreate
 
 load_dotenv()
 
@@ -13,6 +14,27 @@ fake = Faker()
 token = os.getenv("TOKEN")
 base_url = os.getenv("API_BASE_URL")
 
+
+def get_categories():
+    headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
+    result = requests.get(f"{base_url}categories/all", headers=headers)
+    assert result.status_code == 200, print(result.json())
+    return [Category.model_validate(item) for item in result.json()]
+
+def edit_category_name(category_name: str, category_id: str):
+
+    headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
+    username= "asd"
+    category_name = category_name
+    category_data = {
+  "id": category_id,
+  "name": category_name,
+  "username": username,
+  "archived": False
+}
+    result = requests.patch(f"{base_url}categories/update", json=category_data, headers=headers)
+    assert result.status_code == 200, print(result.json())
+    return Category.model_validate(result.json())
 
 def archive_category(category_name: str, category_id: str):
 
@@ -30,7 +52,7 @@ def archive_category(category_name: str, category_id: str):
     time.sleep(10)
 
 
-def create_category(signin_user)->Tuple[str, str]:
+def create_category(signin_user)->Tuple[str, uuid.UUID]:
     headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
     username, _ = signin_user
     category_name = fake.word()
@@ -44,8 +66,8 @@ def create_category(signin_user)->Tuple[str, str]:
     time.sleep(3)
     print(f"Категория {category_name} успешно создана")
     category_id = result.json()['id']
-    time.sleep(10)
-    return category_name, category_id
+    result_model = Category.model_validate(result.json())
+    return result_model.name, result_model.id
 
 def create_spending(signin_user: str, spend_amount: str, spend_category: str, spend_currency: str, spend_date: str, spend_description: str):
   headers = {"Authorization": f"Bearer {token}", "Accept": "*/*", "Content-Type": "application/json"}
@@ -72,8 +94,37 @@ def create_spending(signin_user: str, spend_amount: str, spend_category: str, sp
   result = requests.post(f"{base_url}spends/add", json=data, headers=headers)
   print(result.request.body)
   assert result.status_code == 201, result.request.body
-  return result.json()
+  result_model = SpendCreate.model_validate(result.json())
+  return result_model
   
+def edit_spending(signin_user: str, spend_amount: str, spend_category: str, spend_currency: str, spend_date: str, spend_description: str, spend_id: uuid.UUID):
+  headers = {"Authorization": f"Bearer {token}", "Accept": "*/*", "Content-Type": "application/json"}
+  username, _ = signin_user
+  spend_amount = spend_amount
+  spend_description = spend_description
+  spend_currency = spend_currency
+  category_name = spend_category
+  spend_date = spend_date
+  data = {
+  "id": spend_id,
+  "spendDate": spend_date,
+  "category": {
+    "id": str(uuid.uuid4()),
+    "name": category_name,
+    "username": username,
+    "archived": False
+    },
+  "currency": spend_currency,
+  "amount": spend_amount,
+  "description": spend_description,
+  "username": username
+  }
+
+  result = requests.patch(f"{base_url}spends/edit", json=data, headers=headers)
+  print(result.request.body)
+  assert result.status_code == 200, result.request.body
+  result_model = SpendCreate.model_validate(result.json())
+  return result_model
 
 def delete_spending(spending_id: str):
     headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
