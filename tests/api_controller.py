@@ -1,5 +1,5 @@
-from datetime import datetime, timezone
 import time
+from typing import Tuple
 import uuid
 import requests
 from faker import Faker
@@ -30,7 +30,7 @@ def archive_category(category_name: str, category_id: str):
     time.sleep(10)
 
 
-def create_category(signin_user):
+def create_category(signin_user)->Tuple[str, str]:
     headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
     username, _ = signin_user
     category_name = fake.word()
@@ -72,4 +72,10 @@ def create_spending(signin_user: str, spend_amount: str, spend_category: str, sp
   result = requests.post(f"{base_url}spends/add", json=data, headers=headers)
   print(result.request.body)
   assert result.status_code == 201, result.request.body
+  return result.json()
   
+
+def delete_spending(spending_id: str):
+    headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
+    result = requests.delete(f"{base_url}spends/remove", params={"ids":spending_id}, headers=headers)
+    assert result.status_code == 200, print(result.json())
