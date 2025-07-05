@@ -1,4 +1,5 @@
 from .base_page import BasePage
+import allure
 
 class LoginPage(BasePage):
     def __init__(self, page):
@@ -8,6 +9,7 @@ class LoginPage(BasePage):
         self.login_button = page.get_by_role("button", name="Log in")
         self.signin_invalid_creds_error = page.locator("p.form__error", has_text=f"Неверные учетные данные пользователя")
 
+    @allure.step("Авторизуемся")
     def login(self, username: str, password: str):
         self.username_input.fill(username)
         self.password_input.fill(password)

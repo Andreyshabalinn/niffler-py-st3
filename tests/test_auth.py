@@ -6,87 +6,101 @@ from pages.signup_page import SignupPage
 fake = Faker()
 from dotenv import load_dotenv
 import os
+import allure
 load_dotenv()
 
 base_auth_url = os.getenv("BASE_AUTH_URL")
 base_url = os.getenv("BASE_URL")
 
 
+@allure.epic("Форма авторизации")
+@allure.feature("Авторизация")
+class TestsAuth:
+    @allure.story("Успешная авторизация")
+    def test_successful_signin(page: Page, create_user:Tuple[str, str]):
 
-def test_successful_signin(page: Page, create_user:Tuple[str, str]):
+        user, password = create_user
 
-     user, password = create_user
+        page.goto(f"{base_auth_url}login")
+        login_page = LoginPage(page)
+        login_page.login(user, password)
 
-     page.goto(f"{base_auth_url}login")
-     login_page = LoginPage(page)
-     login_page.login(user, password)
+        page.wait_for_url(f"{base_url}main")
+        assert page.title() == "Niffler"
 
-     page.wait_for_url(f"{base_url}main")
-     assert page.title() == "Niffler"
+    @allure.story("Авторизация под неверными данными")    
+    def test_failed_signin(page: Page):
 
-def test_successful_signup(page: Page):
-     page.goto(f"{base_auth_url}register")
+        username = fake.user_name()
+        password = fake.password()
 
-     username = fake.user_name()
-     password = fake.password()
+        page.goto(f"{base_auth_url}login")
+        login_page = LoginPage(page)
+        login_page.login(username, password)
+        assert login_page.signin_invalid_creds_error.is_visible()
 
-     signup_page = SignupPage(page)
-     signup_page.signup(username, password)
 
-     page.wait_for_url(f"{base_url}main")
-     page.wait_for_url(f"{base_auth_url}login")
-     assert page.title() == "Login to Niffler"
+@allure.epic("Форма регистрации")
+@allure.feature("Регистрация")
+class TestsSignup:
+    @allure.story("Успешная регистрация")    
+    def test_successful_signup(page: Page):
+        page.goto(f"{base_auth_url}register")
 
-def test_try_signup_on_already_exsist_creds(page: Page):
-    page.goto(f"{base_auth_url}register")
+        username = fake.user_name()
+        password = fake.password()
 
-    username = fake.user_name()
-    password = fake.password()
+        signup_page = SignupPage(page)
+        signup_page.signup(username, password)
 
-    signup_page = SignupPage(page)
-    signup_page.signup(username, password)
+        page.wait_for_url(f"{base_url}main")
+        page.wait_for_url(f"{base_auth_url}login")
+        assert page.title() == "Login to Niffler"
 
-    page.goto(f"{base_auth_url}register")
+    @allure.story("Попытка регистрации под существующим пользователем")
+    def test_try_signup_on_already_exsist_creds(page: Page):
+        page.goto(f"{base_auth_url}register")
 
-    signup_page.signup(username, password)
+        username = fake.user_name()
+        password = fake.password()
 
-    signup_page.user_already_exists_span(username).wait_for()
+        signup_page = SignupPage(page)
+        signup_page.signup(username, password)
 
-def test_try_signup_with_invalid_username(page: Page):
-    page.goto(f"{base_auth_url}register")
+        page.goto(f"{base_auth_url}register")
 
-    username = fake.pystr(min_chars=51, max_chars=51)
-    password = fake.password()
+        signup_page.signup(username, password)
 
-    signup_page = SignupPage(page)
-    signup_page.signup(username, password)
+        signup_page.user_already_exists_span(username).wait_for()
 
-def test_try_signup_with_unmatched_passwords(page: Page):
-    page.goto(f"{base_auth_url}register")
+    @allure.story("Попытка регистрации под невалидным именем пользователя")
+    def test_try_signup_with_invalid_username(page: Page):
+        page.goto(f"{base_auth_url}register")
 
-    username = fake.user_name()
-    password = fake.password()
+        username = fake.pystr(min_chars=51, max_chars=51)
+        password = fake.password()
 
-    signup_page = SignupPage(page)
-    signup_page.signup_with_unmatched_passwords(username, password)
+        signup_page = SignupPage(page)
+        signup_page.signup(username, password)
 
-def test_try_signup_with_invalid_password(page: Page):
-    page.goto(f"{base_auth_url}register")
+    @allure.story("Попытка ввода несхожих паролей")
+    def test_try_signup_with_unmatched_passwords(page: Page):
+        page.goto(f"{base_auth_url}register")
 
-    username = fake.user_name()
-    password = "1"
+        username = fake.user_name()
+        password = fake.password()
 
-    signup_page = SignupPage(page)
-    signup_page.signup(username, password)
+        signup_page = SignupPage(page)
+        signup_page.signup_with_unmatched_passwords(username, password)
 
-def test_failed_signin(page: Page):
+    @allure.story("Попытка регистрации под невалидным паролем")
+    def test_try_signup_with_invalid_password(page: Page):
+        page.goto(f"{base_auth_url}register")
 
-    username = fake.user_name()
-    password = fake.password()
+        username = fake.user_name()
+        password = "1"
 
-    page.goto(f"{base_auth_url}login")
-    login_page = LoginPage(page)
-    login_page.login(username, password)
-    assert login_page.signin_invalid_creds_error.is_visible()
+        signup_page = SignupPage(page)
+        signup_page.signup(username, password)
 
     

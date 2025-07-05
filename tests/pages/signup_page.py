@@ -1,5 +1,6 @@
 from .login_page import LoginPage
 from playwright.sync_api import Locator
+import allure
 
 class SignupPage(LoginPage):
     def __init__(self, page):
@@ -11,13 +12,13 @@ class SignupPage(LoginPage):
         self.signup_unmatched_passwords_error = page.locator("span.form__error", has_text=f"Passwords should be equal")
         self.signup_password_len_error = page.locator("span.form__error", has_text=f"Allowed password length should be from 3 to 12 characters").first
 
-    
+    @allure.step("Ищем всплывающиц локатор-ошибку 'Пользователь уже существует'")
     def user_already_exists_span(self, username:str)->Locator:
         return self.page.locator("span.form__error", has_text=f"Username `{username}` already exists")
 
         
 
-
+    @allure.step("Регистрируемся")
     def signup(self, username: str, password: str):
         self.username_input.fill(username)
         self.password_input.fill(password)
@@ -27,7 +28,7 @@ class SignupPage(LoginPage):
             if self.signin_button_link.is_visible():
                 self.signin_button_link.click()
 
-
+    @allure.step("Пытаемся зарегистрироваться с несовпадающими паролями")
     def signup_with_unmatched_passwords(self, username: str, password: str):
         self.username_input.fill(username)
         self.password_input.fill(password)

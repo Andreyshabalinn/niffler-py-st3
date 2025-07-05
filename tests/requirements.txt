@@ -3,6 +3,7 @@ pytest-playwright
 playwright
 faker
 dotenv
+allure-pytest
 
 psycopg2-binary
 sqlalchemy

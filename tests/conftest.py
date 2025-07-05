@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from pytest import FixtureDef, FixtureRequest, Item
 from typing import Tuple
 import pytest
 from playwright.sync_api import sync_playwright
@@ -8,6 +9,7 @@ from dotenv import load_dotenv
 import os
 from tests.api_controller import create_category, create_spending, delete_spending
 from tests.database.spend_db import SpendDb
+import allure
 
 
 load_dotenv()
@@ -92,3 +94,22 @@ def page()->Page:
         page = context.new_page()
         yield page
         browser.close()
+
+
+def allure_logger(config):
+    listener = config.pluginmanager.get_plugin("allure_listener")
+    return listener.allure_logger
+
+@pytest.hookimpl(hookwrapper=True, trylast=True)
+def pytest_fixtures_setup(fixturedef: FixtureDef, request: FixtureRequest):
+    yield
+    logger = allure_logger(request.config)
+    item = logger.get_last_item()
+    scope_letter = fixturedef.scope[0].upper()
+    item.name = f"{scope_letter} " + "".join(fixturedef.argname.split("_")).title()
+
+@pytest.hookimpl(hookwrapper=True, trylast=True)
+def pytest_runtest_call(item: Item):
+    yield
+    allure.dynamic.title(" ".join(item.name.spllit("_")[1:]).title())
+    pass

@@ -1,5 +1,6 @@
 from .base_page import BasePage
 from playwright.sync_api import Locator
+import allure
 
 class ProfilePage(BasePage):
     def __init__(self, page):
@@ -17,28 +18,31 @@ class ProfilePage(BasePage):
         self.name_len_error = page.get_by_text("Fullname length has to be not longer that 50 symbols")
         self.category_max_length_error = page.locator("span", has_text="Allowed category length is from 2 to 50 symbols")
     
+    @allure.step("Ищем категорию по названию")
     def category_by_name(self, category_name: str)->Locator:
         return self.page.locator("span", has_text=category_name)
 
     
-
+    @allure.step("Меняем имя профиля")
     def change_profile_name(self, profile_name: str):
         self.profile_name_input.fill(profile_name)
         self.save_changes_button.click()
         
-    
+    @allure.step("Добавляем категорию на странице профиля")
     def add_category(self, category_name: str):
         self.category_name_input.fill(category_name)
         self.category_name_input.press("Enter")
         self.page.get_by_text(f"You've added new category: {category_name}").wait_for()
 
+    @allure.step("Архивируем категорию")
     def archive_category(self, category_name: str):
         category = self.page.locator("div.MuiBox-root", has=self.page.locator("span", has_text=category_name))
         category.locator('button[aria-label="Archive category"]').click()
         self.archive_dialog.wait_for()
         self.archive_dialog_button.click()
         self.page.get_by_text(f"Category {category_name} is archived").wait_for()
-    
+
+    @allure.step("Редактируем категорию")
     def edit_category(self, category_name: str, new_category_name: str):
         category = self.page.locator("div.MuiBox-root", has=self.page.locator("span", has_text=category_name))
         category.locator('button[aria-label="Edit category"]').click()

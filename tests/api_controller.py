@@ -5,6 +5,7 @@ import requests
 from faker import Faker
 from dotenv import load_dotenv
 import os
+import allure
 from tests.models.spend import Category, SpendCreate
 
 load_dotenv()
@@ -19,7 +20,9 @@ def get_categories():
     headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
     result = requests.get(f"{base_url}categories/all", headers=headers)
     assert result.status_code == 200, print(result.json())
-    return [Category.model_validate(item) for item in result.json()]
+    categories = [Category.model_validate(item) for item in result.json()]
+    allure.attach(str(categories), name="Rquested Categories", attachment_type=allure.attachment_type.TEXT)
+    return categories
 
 def edit_category_name(category_name: str, category_id: str):
 
@@ -34,7 +37,9 @@ def edit_category_name(category_name: str, category_id: str):
 }
     result = requests.patch(f"{base_url}categories/update", json=category_data, headers=headers)
     assert result.status_code == 200, print(result.json())
-    return Category.model_validate(result.json())
+    category_name = Category.model_validate(result.json())
+    allure.attach(str(category_name), name="Rquested Categories", attachment_type=allure.attachment_type.TEXT)
+    return category_name
 
 def archive_category(category_name: str, category_id: str):
 

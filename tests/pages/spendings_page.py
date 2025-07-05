@@ -1,4 +1,5 @@
 import time
+import allure
 from .main_page import MainPage
 from playwright.sync_api import Locator
 
@@ -24,12 +25,12 @@ class SpendingsPage(MainPage):
         self.spending_currency_filter = page.locator("#currency")
         self.spending_amount_error = page.locator("span", has_text="Amount has to be not less then 0.01")
 
-    
+    @allure.step("Ищем ряд определённой траты")
     def spending_row(self, spending_category:str, spending_amount:str, spending_date:str)->Locator:
         return self.page.locator(f'tr:has(span:has-text("{spending_category}")):has(span:has-text("{spending_amount}")):has(span:has-text("{spending_date}"))')
         
         
-
+    @allure.step("Создаём трату")
     def add_spending(self, spending_amount: str, spending_currency: str, spending_category: str, spending_date: str, spending_description: str):
 
         self.add_spending_button_link.click()
@@ -61,7 +62,7 @@ class SpendingsPage(MainPage):
         self.success_add_spending_popup.wait_for()
 
     
-
+    @allure.step("Редактируем трату")
     def edit_spending(self, spending_category: str, spending_date: str, spending_description: str, new_spending_amount: str, new_spending_currency: str, new_spending_category: str, new_spending_date: str, new_spending_description: str):
 
         row = self.page.locator("tr").filter(
@@ -104,7 +105,7 @@ class SpendingsPage(MainPage):
         f'tr:has(span:has-text("{new_spending_category}")):has(span:has-text("{new_spending_amount}"))')
         row.wait_for()
 
-    
+    @allure.step("Редактируем трату невалидными значениями")
     def edit_invalid_spending(self, spending_category: str, spending_date: str, spending_description: str, new_spending_amount: str):
 
         row = self.page.locator("tr").filter(
@@ -120,7 +121,7 @@ class SpendingsPage(MainPage):
         self.amount_input.fill(new_spending_amount)
         self.amount_input.press("Enter")
 
-
+    @allure.step("Удаляем трату")
     def delete_spending(self, category_name: str, spend_amount: str, spend_date: str):
         row = self.page.locator(
         f'tr:has(span:has-text("{category_name}")):has(span:has-text("{spend_amount}")):has(span:has-text("{spend_date}"))')
@@ -133,6 +134,7 @@ class SpendingsPage(MainPage):
         
         return row
     
+    @allure.step("Удаляем все траты")
     def delete_all_spending(self):
         self.select_all_rows_checkbox.click()
         self.delete_spending_button.click()
@@ -142,11 +144,14 @@ class SpendingsPage(MainPage):
         self.no_spendings_text.wait_for()
         self.delete_spending_popup.wait_for()
 
+
+    @allure.step("Ищем трату по её категории")
     def search_spending_by_category(self, category_name:str):
         self.spending_search_input.fill(category_name)
         self.spending_search_input.press("Enter")
         time.sleep(2)
     
+    @allure.step("Ищем трату по её валюте")
     def search_spending_by_currency(self, spending_currency:str):
         self.spending_currency_filter.click()
         self.page.locator(f'[data-value="{spending_currency}"]').click()

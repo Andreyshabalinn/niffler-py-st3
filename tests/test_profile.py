@@ -4,74 +4,84 @@ fake = Faker()
 from pages.profile_page import ProfilePage
 from dotenv import load_dotenv
 import os
+import allure
 load_dotenv()
 
 base_url = os.getenv("BASE_URL")
 
+@allure.epic("Страница профиля")
+@allure.feature("Имя профиля")
+class TestsProfileName:
 
-def test_edit_profile_name(page: Page, signin_user):
-    user, _ = signin_user
+    @allure.story("Создание траты")
+    def test_edit_profile_name(page: Page, signin_user):
+        user, _ = signin_user
 
-    page.goto(f"{base_url}profile")
-    profile_page = ProfilePage(page)
-    profile_page.change_profile_name(user)
-    profile_page.profile_success_update_popup.wait_for()
+        page.goto(f"{base_url}profile")
+        profile_page = ProfilePage(page)
+        profile_page.change_profile_name(user)
+        profile_page.profile_success_update_popup.wait_for()
 
-def test_edit_invalid_profile_name(page: Page, signin_user):
+    @allure.story("Создание траты")
+    def test_edit_invalid_profile_name(page: Page, signin_user):
 
-    page.goto(f"{base_url}profile")
-    profile_page = ProfilePage(page)
-    profile_page.change_profile_name(fake.pystr(min_chars=51, max_chars=51))
-    assert profile_page.name_len_error.is_visible()
-
-
-
-def test_add_profile_category(page: Page, signin_user):
-    page.goto(f"{base_url}profile")
-
-    category_name = fake.word()
-    profile_page = ProfilePage(page)
-    profile_page.add_category(category_name)
-    assert profile_page.category_by_name(category_name).is_visible()
-    profile_page.archive_category(category_name)
-
-def test_add_invalid_profile_category(page: Page, signin_user):
-    page.goto(f"{base_url}profile")
-
-    category_name = "+"
-    profile_page = ProfilePage(page)
-    profile_page.category_name_input.fill(category_name)
-    profile_page.category_name_input.press("Enter")
-    assert profile_page.category_by_name(category_name).is_hidden()
-    assert profile_page.category_max_length_error.is_visible()
+        page.goto(f"{base_url}profile")
+        profile_page = ProfilePage(page)
+        profile_page.change_profile_name(fake.pystr(min_chars=51, max_chars=51))
+        assert profile_page.name_len_error.is_visible()
 
 
+@allure.epic("Страница профиля")
+@allure.feature("Категории профиля")
+class TestsProfileCategory:
 
-def test_archive_category(page: Page, created_category):
+    @allure.story("Создание категории")
+    def test_add_profile_category(page: Page, signin_user):
+        page.goto(f"{base_url}profile")
 
-    category_name, _ = created_category
+        category_name = fake.word()
+        profile_page = ProfilePage(page)
+        profile_page.add_category(category_name)
+        assert profile_page.category_by_name(category_name).is_visible()
+        profile_page.archive_category(category_name)
 
-    page.goto(f"{base_url}profile")
+    @allure.story("Создание невалидной категории")
+    def test_add_invalid_profile_category(page: Page, signin_user):
+        page.goto(f"{base_url}profile")
 
-    profile_page = ProfilePage(page)
+        category_name = "+"
+        profile_page = ProfilePage(page)
+        profile_page.category_name_input.fill(category_name)
+        profile_page.category_name_input.press("Enter")
+        assert profile_page.category_by_name(category_name).is_hidden()
+        assert profile_page.category_max_length_error.is_visible()
 
-    profile_page.archive_category(category_name)
 
-    assert profile_page.category_by_name(category_name).is_hidden()
-    profile_page.is_archive_include_checkbox.check()
-    assert profile_page.category_by_name(category_name).is_visible()
+    @allure.story("Архивация категории")
+    def test_archive_category(page: Page, created_category):
 
+        category_name, _ = created_category
 
-#Добавить page object
-def test_edit_category(page: Page, created_category):
+        page.goto(f"{base_url}profile")
 
-    category_name, category_id = created_category
+        profile_page = ProfilePage(page)
 
-    page.goto(f"{base_url}profile")
+        profile_page.archive_category(category_name)
 
-    new_category_name = fake.word()
-    profile_page = ProfilePage(page)
-    profile_page.edit_category(category_name, new_category_name)
+        assert profile_page.category_by_name(category_name).is_hidden()
+        profile_page.is_archive_include_checkbox.check()
+        assert profile_page.category_by_name(category_name).is_visible()
 
-    assert profile_page.category_by_name(new_category_name).is_visible()
+    @allure.story("Редактирование категории")
+    def test_edit_category(page: Page, created_category):
+
+        category_name, category_id = created_category
+
+        page.goto(f"{base_url}profile")
+
+        new_category_name = fake.word()
+        profile_page = ProfilePage(page)
+        profile_page.edit_category(category_name, new_category_name)
+
+        assert profile_page.category_by_name(new_category_name).is_visible()
 
