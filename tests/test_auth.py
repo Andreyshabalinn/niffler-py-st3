@@ -17,7 +17,7 @@ base_url = os.getenv("BASE_URL")
 @allure.feature("Авторизация")
 class TestsAuth:
     @allure.story("Успешная авторизация")
-    def test_successful_signin(page: Page, create_user:Tuple[str, str]):
+    def test_successful_signin(self, page: Page, create_user:Tuple[str, str]):
 
         user, password = create_user
 
@@ -29,7 +29,7 @@ class TestsAuth:
         assert page.title() == "Niffler"
 
     @allure.story("Авторизация под неверными данными")    
-    def test_failed_signin(page: Page):
+    def test_failed_signin(self, page: Page):
 
         username = fake.user_name()
         password = fake.password()
@@ -44,7 +44,7 @@ class TestsAuth:
 @allure.feature("Регистрация")
 class TestsSignup:
     @allure.story("Успешная регистрация")    
-    def test_successful_signup(page: Page):
+    def test_successful_signup(self, page: Page):
         page.goto(f"{base_auth_url}register")
 
         username = fake.user_name()
@@ -58,7 +58,7 @@ class TestsSignup:
         assert page.title() == "Login to Niffler"
 
     @allure.story("Попытка регистрации под существующим пользователем")
-    def test_try_signup_on_already_exsist_creds(page: Page):
+    def test_try_signup_on_already_exsist_creds(self, page: Page):
         page.goto(f"{base_auth_url}register")
 
         username = fake.user_name()
@@ -74,7 +74,7 @@ class TestsSignup:
         signup_page.user_already_exists_span(username).wait_for()
 
     @allure.story("Попытка регистрации под невалидным именем пользователя")
-    def test_try_signup_with_invalid_username(page: Page):
+    def test_try_signup_with_invalid_username(self, page: Page):
         page.goto(f"{base_auth_url}register")
 
         username = fake.pystr(min_chars=51, max_chars=51)
@@ -84,7 +84,7 @@ class TestsSignup:
         signup_page.signup(username, password)
 
     @allure.story("Попытка ввода несхожих паролей")
-    def test_try_signup_with_unmatched_passwords(page: Page):
+    def test_try_signup_with_unmatched_passwords(self, page: Page):
         page.goto(f"{base_auth_url}register")
 
         username = fake.user_name()
@@ -94,7 +94,7 @@ class TestsSignup:
         signup_page.signup_with_unmatched_passwords(username, password)
 
     @allure.story("Попытка регистрации под невалидным паролем")
-    def test_try_signup_with_invalid_password(page: Page):
+    def test_try_signup_with_invalid_password(self, page: Page):
         page.goto(f"{base_auth_url}register")
 
         username = fake.user_name()

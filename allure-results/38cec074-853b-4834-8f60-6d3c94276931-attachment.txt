@@ -1,0 +1,1 @@
+b'{"spendDate": "2025-07-06T11:07:29.697Z", "category": {"id": "bef909f8-2cfc-469a-99de-177c05c5f220", "name": "attorney", "username": "asd", "archived": false}, "currency": "KZT", "amount": 6129, "description": "management", "username": "asd"}'

@@ -1,0 +1,2 @@
+b'{"spendDate": "2025-07-06T11:06:08.193Z", "category": {"id": "5c0514f5-1a25-4c27-8143-c4a5366c93aa", "name": "same", "username": "asd", "archived": false}, "currency": "KZT", "amount": 4063, "description": "goal", "username": "asd"}'
+b'{"spendDate": "2025-07-06T11:06:08.225Z", "category": {"id": "c5213df5-1faf-4a6b-aa81-94921f4f3389", "name": "callTest", "username": "asd", "archived": false}, "currency": "RUB", "amount": 6330, "description": "leader", "username": "asd"}'

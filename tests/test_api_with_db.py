@@ -16,7 +16,7 @@ db_url = os.getenv("DB_URL")
 class TestsSpendApi:
 
     @allure.story("Создание траты")
-    def test_add_spend(signin_user):
+    def test_add_spend(self, signin_user):
         amount = 1234
         category = "TestSpend"
         currency = "RUB"
@@ -40,7 +40,7 @@ class TestsSpendApi:
 
 
     @allure.story("Создание траты")
-    def test_edit_spend(created_spend, signin_user):
+    def test_edit_spend(self, created_spend, signin_user):
         new_amount = 1234
         new_category = "TestSpendCat"
         new_currency = "RUB"
@@ -59,7 +59,7 @@ class TestsSpendApi:
         assert db_spend.category_id == db_client.get_category_by_name(new_category).id
 
     @allure.story("Создание траты")
-    def test_remove_spend(created_spend):
+    def test_remove_spend(self, created_spend):
         delete_spending(created_spend.id)
         db_client = SpendDb(db_url)
         db_spend = db_client.get_spend_by_id(created_spend.id)
@@ -70,7 +70,7 @@ class TestsSpendApi:
 @allure.epic("API Niffler")
 @allure.feature("Категории")
 class TestsCategoryApi:
-    def test_add_category(signin_user):
+    def test_add_category(self, signin_user):
         _, created_category_id = create_category(signin_user)
         db_client = SpendDb(db_url)
         db_category = db_client.get_category_by_id(created_category_id)
@@ -78,12 +78,12 @@ class TestsCategoryApi:
         db_client.delete_category(db_category.id)
 
 
-    def test_update_category(created_category):
+    def test_update_category(self, created_category):
         new_category_name = "NewNameCatApi"
         edited_category = edit_category_name(category_name=new_category_name, category_id=str(created_category[1]))
         assert edited_category.name == new_category_name
 
-    def test_get_all(created_category, signin_user):
+    def test_get_all(self, created_category, signin_user):
         categories = get_categories()
         db_client = SpendDb(db_url)
         db_categories = db_client.get_categories(signin_user[0])

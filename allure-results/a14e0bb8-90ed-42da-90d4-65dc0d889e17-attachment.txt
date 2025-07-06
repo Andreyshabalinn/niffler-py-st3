@@ -1,0 +1,1 @@
+http://gateway.niffler.dc:8090/api/categories/all

@@ -1,0 +1,2 @@
+b'{"spendDate": "2025-07-06T11:15:18.955Z", "category": {"id": "1f6ed955-69fa-4991-a0b5-a9db00bde7ed", "name": "inside", "username": "asd", "archived": false}, "currency": "KZT", "amount": 1258, "description": "challenge", "username": "asd"}'
+b'{"spendDate": "2025-07-06T11:15:18.979Z", "category": {"id": "c0de3119-dc95-447a-89e6-1fab537397cd", "name": "suggestTest", "username": "asd", "archived": false}, "currency": "RUB", "amount": 8560, "description": "our", "username": "asd"}'

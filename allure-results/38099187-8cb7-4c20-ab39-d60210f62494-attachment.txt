@@ -1,0 +1,1 @@
+b'{"spendDate": "2025-07-06T11:14:36.922Z", "category": {"id": "b4b6ee1a-24f9-4bb7-80ea-c390886f1a25", "name": "model", "username": "asd", "archived": false}, "currency": "KZT", "amount": 7534, "description": "rest", "username": "asd"}'

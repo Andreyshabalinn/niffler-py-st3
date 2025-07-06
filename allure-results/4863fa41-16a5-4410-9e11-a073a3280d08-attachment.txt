@@ -1,0 +1,1 @@
+spend_date=datetime.date(2025, 7, 6) currency='RUB' description='TestDescriptio' category_id=UUID('43319341-624c-469c-a909-f382924399f9') amount=1234.0 id=UUID('9a0f0180-10bd-4438-8725-64dd43f6053e') username='asd'

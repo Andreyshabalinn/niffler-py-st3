@@ -19,7 +19,7 @@ db_url = os.getenv("DB_URL")
 @allure.feature("Создание трат")
 class TestsCreateSpends:
     @allure.story("Создание траты")
-    def test_create_spend(page: Page, signin_user):
+    def test_create_spend(self, page: Page, signin_user):
         # Входные данные для создаваемой траты
         spending_amount = str(fake.random_int(min=10, max=10000))
         spending_currency = "KZT"
@@ -43,7 +43,7 @@ class TestsCreateSpends:
         profile_page.archive_category(spending_category)
 
     @allure.story("Создание невалидной траты")
-    def test_create_invalid_spend(page: Page, signin_user):
+    def test_create_invalid_spend(self, page: Page, signin_user):
         # Входные данные для создаваемой траты
         spending_amount = "0"
         spendings_page = SpendingsPage(page)
@@ -61,7 +61,7 @@ class TestsCreateSpends:
 @allure.feature("Удаление трат")
 class TestsDeleteSpends:
     @allure.story("Успешное удаление одной траты")
-    def test_delete_spend(page: Page, created_spend):
+    def test_delete_spend(self, page: Page, created_spend):
         today = date.today()
         spend_date = str(today.day)
 
@@ -74,7 +74,7 @@ class TestsDeleteSpends:
         assert row.is_hidden()
 
     @allure.story("Удаление всех трат")
-    def test_delete_all_spends(page: Page, created_spend):
+    def test_delete_all_spends(self, page: Page, created_spend):
         # Удаляем все траты
         spending_page = SpendingsPage(page)
         spending_page.delete_all_spending()
@@ -84,7 +84,7 @@ class TestsDeleteSpends:
 @allure.feature("Редактированиие трат")
 class TestsEditeSpends:
     @allure.story("Успешное редактирование траты")
-    def test_edit_spend(page: Page, created_spend):
+    def test_edit_spend(self, page: Page, created_spend):
 
         # Входные данные для создаваемой траты
         
@@ -105,7 +105,7 @@ class TestsEditeSpends:
         spendings_page.edit_spending(created_spend.category.name, spending_day, created_spend.description, new_spending_amount, new_spending_currency, new_spending_category, new_spending_date, new_spending_description)
 
     @allure.story("Редактирование траты с ошибкой")
-    def test_edit_spend_with_error(page: Page, created_spend):
+    def test_edit_spend_with_error(self, page: Page, created_spend):
 
         now = datetime.now(timezone.utc)
         spending_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
@@ -125,7 +125,7 @@ class TestsEditeSpends:
 @allure.feature("Поиск трат")
 class TestsSearchSpends:
     @allure.story("Поиск траты по категории")
-    def test_search_spending_by_category(page: Page, created_spend, signin_user):
+    def test_search_spending_by_category(self, page: Page, created_spend, signin_user):
         # Входные данные для создаваемых трат
         spend_amount = fake.random_int(min=10, max=10000)
         spend_description = fake.word()
@@ -158,7 +158,7 @@ class TestsSearchSpends:
         db_client.delete_category_by_name(spend_two.category.name)
 
     @allure.story("Поиск траты по валюте")
-    def test_search_spending_by_currency(page: Page, created_spend, signin_user):
+    def test_search_spending_by_currency(self, page: Page, created_spend, signin_user):
         # Входные данные для создаваемых трат
         spend_amount = fake.random_int(min=10, max=10000)
         spend_description = fake.word()

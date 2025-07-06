@@ -1,0 +1,1 @@
+username='asd' id=UUID('8d4fe665-54eb-41df-8f1f-0a0bccdce380') archived=False name='TestSpendCat'

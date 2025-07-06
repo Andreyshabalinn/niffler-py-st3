@@ -1,0 +1,1 @@
+{'id': 'd08455eb-2506-4abe-845a-b393cf850650', 'spendDate': '2025-07-06T11:19:57.085Z', 'category': {'id': 'b62f7e54-f00f-4c47-918e-84a11be43b54', 'name': 'TestSpendCat', 'username': 'asd', 'archived': False}, 'currency': 'RUB', 'amount': 1234, 'description': 'TestDescriptionNew', 'username': 'asd'}

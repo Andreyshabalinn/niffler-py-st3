@@ -101,7 +101,7 @@ def allure_logger(config):
     return listener.allure_logger
 
 @pytest.hookimpl(hookwrapper=True, trylast=True)
-def pytest_fixtures_setup(fixturedef: FixtureDef, request: FixtureRequest):
+def pytest_fixture_setup(fixturedef: FixtureDef, request: FixtureRequest):
     yield
     logger = allure_logger(request.config)
     item = logger.get_last_item()
@@ -111,5 +111,5 @@ def pytest_fixtures_setup(fixturedef: FixtureDef, request: FixtureRequest):
 @pytest.hookimpl(hookwrapper=True, trylast=True)
 def pytest_runtest_call(item: Item):
     yield
-    allure.dynamic.title(" ".join(item.name.spllit("_")[1:]).title())
+    allure.dynamic.title(" ".join(item.name.split("_")[1:]).title())
     pass

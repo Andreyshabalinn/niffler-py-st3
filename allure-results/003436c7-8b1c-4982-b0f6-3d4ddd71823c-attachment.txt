@@ -1,0 +1,2 @@
+b'{"spendDate": "2025-07-06T11:11:50.551Z", "category": {"id": "8400608c-e6dc-41ef-a57c-65bd3ba5c6bf", "name": "car", "username": "asd", "archived": false}, "currency": "KZT", "amount": 7062, "description": "memory", "username": "asd"}'
+b'{"spendDate": "2025-07-06T11:11:50.580Z", "category": {"id": "fbe6c3b0-6b3d-4ffc-bc2e-c53eea57c3d6", "name": "youngTest", "username": "asd", "archived": false}, "currency": "RUB", "amount": 790, "description": "include", "username": "asd"}'

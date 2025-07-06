@@ -14,7 +14,7 @@ base_url = os.getenv("BASE_URL")
 class TestsProfileName:
 
     @allure.story("Создание траты")
-    def test_edit_profile_name(page: Page, signin_user):
+    def test_edit_profile_name(self, page: Page, signin_user):
         user, _ = signin_user
 
         page.goto(f"{base_url}profile")
@@ -23,7 +23,7 @@ class TestsProfileName:
         profile_page.profile_success_update_popup.wait_for()
 
     @allure.story("Создание траты")
-    def test_edit_invalid_profile_name(page: Page, signin_user):
+    def test_edit_invalid_profile_name(self, page: Page, signin_user):
 
         page.goto(f"{base_url}profile")
         profile_page = ProfilePage(page)
@@ -36,7 +36,7 @@ class TestsProfileName:
 class TestsProfileCategory:
 
     @allure.story("Создание категории")
-    def test_add_profile_category(page: Page, signin_user):
+    def test_add_profile_category(self, page: Page, signin_user):
         page.goto(f"{base_url}profile")
 
         category_name = fake.word()
@@ -46,7 +46,7 @@ class TestsProfileCategory:
         profile_page.archive_category(category_name)
 
     @allure.story("Создание невалидной категории")
-    def test_add_invalid_profile_category(page: Page, signin_user):
+    def test_add_invalid_profile_category(self, page: Page, signin_user):
         page.goto(f"{base_url}profile")
 
         category_name = "+"
@@ -58,7 +58,7 @@ class TestsProfileCategory:
 
 
     @allure.story("Архивация категории")
-    def test_archive_category(page: Page, created_category):
+    def test_archive_category(self, page: Page, created_category):
 
         category_name, _ = created_category
 
@@ -73,7 +73,7 @@ class TestsProfileCategory:
         assert profile_page.category_by_name(category_name).is_visible()
 
     @allure.story("Редактирование категории")
-    def test_edit_category(page: Page, created_category):
+    def test_edit_category(self, page: Page, created_category):
 
         category_name, category_id = created_category
 
