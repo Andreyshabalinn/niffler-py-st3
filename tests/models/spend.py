@@ -5,6 +5,7 @@ from typing import Optional
 from sqlmodel import Field
 from sqlalchemy.sql import quoted_name
 
+
 class Category(SQLModel, table=True):
     __tablename__ = "category"
     id: UUID = Field(primary_key=True)
@@ -13,6 +14,7 @@ class Category(SQLModel, table=True):
     archived: bool
 
     spends: list["Spend"] = Relationship(back_populates="category")
+
 
 class Spend(SQLModel, table=True):
     __tablename__ = "spend"

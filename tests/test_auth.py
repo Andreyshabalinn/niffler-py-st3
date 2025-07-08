@@ -1,12 +1,13 @@
-from typing import Tuple
-from playwright.sync_api import Page
+from playwright.sync_api import Page,expect
 from faker import Faker
 from pages.login_page import LoginPage
 from pages.signup_page import SignupPage
+
 fake = Faker()
 from dotenv import load_dotenv
 import os
 import allure
+
 load_dotenv()
 
 base_auth_url = os.getenv("BASE_AUTH_URL")
@@ -17,7 +18,7 @@ base_url = os.getenv("BASE_URL")
 @allure.feature("Авторизация")
 class TestsAuth:
     @allure.story("Успешная авторизация")
-    def test_successful_signin(self, page: Page, create_user:Tuple[str, str]):
+    def test_successful_signin(self, page: Page, create_user: tuple[str, str]):
 
         user, password = create_user
 
@@ -28,7 +29,7 @@ class TestsAuth:
         page.wait_for_url(f"{base_url}main")
         assert page.title() == "Niffler"
 
-    @allure.story("Авторизация под неверными данными")    
+    @allure.story("Авторизация под неверными данными")
     def test_failed_signin(self, page: Page):
 
         username = fake.user_name()
@@ -37,13 +38,13 @@ class TestsAuth:
         page.goto(f"{base_auth_url}login")
         login_page = LoginPage(page)
         login_page.login(username, password)
-        assert login_page.signin_invalid_creds_error.is_visible()
+        login_page.signin_invalid_creds_error.wait_for(state="visible")
 
 
 @allure.epic("Форма регистрации")
 @allure.feature("Регистрация")
 class TestsSignup:
-    @allure.story("Успешная регистрация")    
+    @allure.story("Успешная регистрация")
     def test_successful_signup(self, page: Page):
         page.goto(f"{base_auth_url}register")
 
@@ -102,5 +103,3 @@ class TestsSignup:
 
         signup_page = SignupPage(page)
         signup_page.signup(username, password)
-
-    
