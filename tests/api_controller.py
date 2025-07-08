@@ -18,7 +18,7 @@ base_url = os.getenv("API_BASE_URL")
 def get_categories():
     headers = {"Authorization": f"Bearer {token}", "Accept": "*/*"}
     result = requests.get(f"{base_url}categories/all", headers=headers)
-    
+
     allure.attach(
         str(headers),
         name="Request Headers",
@@ -59,7 +59,7 @@ def edit_category_name(category_name: str, category_id: str):
     result = requests.patch(
         f"{base_url}categories/update", json=category_data, headers=headers
     )
-    
+
     allure.attach(
         str(headers),
         name="Request Headers",
@@ -105,7 +105,7 @@ def archive_category(category_name: str, category_id: str):
     result = requests.patch(
         f"{base_url}categories/update", json=category_data, headers=headers
     )
-    
+
     allure.attach(
         str(headers),
         name="Request Headers",
@@ -198,7 +198,7 @@ def create_spending(
         "username": username,
     }
     result = requests.post(f"{base_url}spends/add", json=data, headers=headers)
-    
+
     allure.attach(
         str(headers),
         name="Request Headers",
@@ -256,7 +256,7 @@ def edit_spending(
         "username": username,
     }
     result = requests.patch(f"{base_url}spends/edit", json=data, headers=headers)
-    
+
     allure.attach(
         str(headers),
         name="Request Headers",
@@ -289,7 +289,7 @@ def delete_spending(spending_id: str):
     result = requests.delete(
         f"{base_url}spends/remove", params={"ids": spending_id}, headers=headers
     )
-    
+
     allure.attach(
         str(headers),
         name="Request Headers",

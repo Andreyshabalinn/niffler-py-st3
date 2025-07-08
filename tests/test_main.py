@@ -153,7 +153,9 @@ class TestsEditeSpends:
 @allure.feature("Поиск трат")
 class TestsSearchSpends:
     @allure.story("Поиск траты по категории")
-    def test_search_spending_by_category(self, page: Page, created_spend, authenticated_user):
+    def test_search_spending_by_category(
+        self, page: Page, created_spend, authenticated_user
+    ):
         # Входные данные для создаваемых трат
         spend_amount = fake.random_int(min=10, max=10000)
         spend_description = fake.word()
@@ -196,7 +198,9 @@ class TestsSearchSpends:
         db_client.delete_category_by_name(spend_two.category.name)
 
     @allure.story("Поиск траты по валюте")
-    def test_search_spending_by_currency(self, page: Page, created_spend, authenticated_user):
+    def test_search_spending_by_currency(
+        self, page: Page, created_spend, authenticated_user
+    ):
         # Входные данные для создаваемых трат
         spend_amount = fake.random_int(min=10, max=10000)
         spend_description = fake.word()
