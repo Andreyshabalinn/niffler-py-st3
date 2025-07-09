@@ -1,2 +1,0 @@
-b'{"spendDate": "2025-07-06T11:21:21.198Z", "category": {"id": "a36f1b65-4fc5-4298-87c6-36404eb3e1ce", "name": "of", "username": "asd", "archived": false}, "currency": "KZT", "amount": 8549, "description": "should", "username": "asd"}'
-b'{"spendDate": "2025-07-06T11:21:21.224Z", "category": {"id": "e2afd855-61f5-4245-9a13-7bdfcedc3b78", "name": "PMTest", "username": "asd", "archived": false}, "currency": "RUB", "amount": 4104, "description": "coach", "username": "asd"}'

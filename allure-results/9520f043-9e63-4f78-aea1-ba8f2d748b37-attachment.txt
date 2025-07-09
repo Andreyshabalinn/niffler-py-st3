@@ -1,1 +1,0 @@
-b'{"spendDate": "2025-07-06T11:14:32.242Z", "category": {"id": "f87dc454-239e-44b0-9a7c-d3f8760f84f4", "name": "arm", "username": "asd", "archived": false}, "currency": "KZT", "amount": 1295, "description": "tend", "username": "asd"}'

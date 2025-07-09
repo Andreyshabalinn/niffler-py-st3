@@ -1,1 +1,0 @@
-b'{"spendDate": "2025-07-06T11:11:46.040Z", "category": {"id": "3e064fec-6629-4767-b6bf-9d5b92dd0247", "name": "material", "username": "asd", "archived": false}, "currency": "KZT", "amount": 1377, "description": "party", "username": "asd"}'

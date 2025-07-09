@@ -1,1 +1,0 @@
-http://gateway.niffler.dc:8090/api/spends/remove?ids=ba32ab71-bb24-4452-a3ae-77a81afefe72

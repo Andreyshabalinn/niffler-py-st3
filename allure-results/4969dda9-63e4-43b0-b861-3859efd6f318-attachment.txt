@@ -1,2 +1,0 @@
-b'{"spendDate": "2025-07-06T11:13:54.995Z", "category": {"id": "5d2c1057-8048-41ab-81ce-2cb5253bc071", "name": "budget", "username": "asd", "archived": false}, "currency": "KZT", "amount": 8681, "description": "lead", "username": "asd"}'
-b'{"id": "b65ae92a-5220-4d95-977f-fb1c6dafbd92", "spendDate": "2025-07-06T11:13:55.033Z", "category": {"id": "d86b6659-9163-4cee-b545-f7685f6c219f", "name": "TestSpendCat", "username": "asd", "archived": false}, "currency": "RUB", "amount": 1234, "description": "TestDescriptionNew", "username": "asd"}'

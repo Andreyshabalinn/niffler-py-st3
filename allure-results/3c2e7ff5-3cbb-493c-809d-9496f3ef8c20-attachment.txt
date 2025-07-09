@@ -1,2 +1,0 @@
-b'{"spendDate": "2025-07-06T11:07:38.794Z", "category": {"id": "f8ea186d-8d7e-4489-935f-4a0184815d9e", "name": "same", "username": "asd", "archived": false}, "currency": "KZT", "amount": 1433, "description": "million", "username": "asd"}'
-b'{"spendDate": "2025-07-06T11:07:38.822Z", "category": {"id": "4e07d5c4-84bc-45f3-8ec6-87fb46876b15", "name": "hundredTest", "username": "asd", "archived": false}, "currency": "RUB", "amount": 900, "description": "Democrat", "username": "asd"}'

@@ -86,7 +86,6 @@ class TestsSpendApi:
         delete_spending(created_spend.id)
         db_client = SpendDb(db_url)
         db_spend = db_client.get_spend_by_id(created_spend.id)
-        print(db_spend)
         assert db_spend is None
 
 

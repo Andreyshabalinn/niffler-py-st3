@@ -1,1 +1,0 @@
-deleted category_id = 7f11aa37-a1cf-4523-b07f-689407c0a9ae

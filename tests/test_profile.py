@@ -17,19 +17,17 @@ base_url = os.getenv("BASE_URL")
 class TestsProfileName:
 
     @allure.story("Создание траты")
-    def test_edit_profile_name(self, page: Page, authenticated_user):
+    def test_edit_profile_name(self, page: Page, authenticated_user, profile_page):
         user, _ = authenticated_user
 
         page.goto(f"{base_url}profile")
-        profile_page = ProfilePage(page)
         profile_page.change_profile_name(user)
         profile_page.profile_success_update_popup.wait_for()
 
     @allure.story("Создание траты")
-    def test_edit_invalid_profile_name(self, page: Page, authenticated_user):
+    def test_edit_invalid_profile_name(self, page: Page, authenticated_user, profile_page):
 
         page.goto(f"{base_url}profile")
-        profile_page = ProfilePage(page)
         profile_page.change_profile_name(fake.pystr(min_chars=51, max_chars=51))
         assert profile_page.name_len_error.is_visible()
 
@@ -39,34 +37,30 @@ class TestsProfileName:
 class TestsProfileCategory:
 
     @allure.story("Создание категории")
-    def test_add_profile_category(self, page: Page, authenticated_user):
+    def test_add_profile_category(self, page: Page, authenticated_user, profile_page):
         page.goto(f"{base_url}profile")
 
         category_name = fake.word()
-        profile_page = ProfilePage(page)
         profile_page.add_category(category_name)
         profile_page.category_by_name(category_name).wait_for()
         profile_page.archive_category(category_name)
 
     @allure.story("Создание невалидной категории")
-    def test_add_invalid_profile_category(self, page: Page, authenticated_user):
+    def test_add_invalid_profile_category(self, page: Page, authenticated_user, profile_page):
         page.goto(f"{base_url}profile")
 
         category_name = "+"
-        profile_page = ProfilePage(page)
         profile_page.category_name_input.fill(category_name)
         profile_page.category_name_input.press("Enter")
         assert profile_page.category_by_name(category_name).is_hidden()
         assert profile_page.category_max_length_error.is_visible()
 
     @allure.story("Архивация категории")
-    def test_archive_category(self, page: Page, created_category):
+    def test_archive_category(self, page: Page, created_category, profile_page):
 
         category_name, _ = created_category
 
         page.goto(f"{base_url}profile")
-
-        profile_page = ProfilePage(page)
 
         profile_page.archive_category(category_name)
 
@@ -75,14 +69,13 @@ class TestsProfileCategory:
         assert profile_page.category_by_name(category_name).is_visible()
 
     @allure.story("Редактирование категории")
-    def test_edit_category(self, page: Page, created_category):
+    def test_edit_category(self, page: Page, created_category, profile_page):
 
         category_name, category_id = created_category
 
         page.goto(f"{base_url}profile")
 
         new_category_name = fake.word()
-        profile_page = ProfilePage(page)
         profile_page.edit_category(category_name, new_category_name)
 
         profile_page.category_by_name(new_category_name).wait_for()

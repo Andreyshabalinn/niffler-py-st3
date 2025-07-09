@@ -1,2 +1,0 @@
-b'{"spendDate": "2025-07-06T11:15:21.274Z", "category": {"id": "e175f7a9-2d3e-4081-99e2-9f0d51280921", "name": "special", "username": "asd", "archived": false}, "currency": "KZT", "amount": 679, "description": "simply", "username": "asd"}'
-b'{"spendDate": "2025-07-06T11:15:21.297Z", "category": {"id": "4aaf0240-9d64-4d4c-9528-01a70dbd343a", "name": "cellTest", "username": "asd", "archived": false}, "currency": "RUB", "amount": 4937, "description": "bill", "username": "asd"}'

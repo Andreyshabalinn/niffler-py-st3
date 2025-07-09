@@ -1,1 +1,0 @@
-b'{"spendDate": "2025-07-06T11:13:52.711Z", "category": {"id": "18c7974a-f7a8-44b4-b302-4f1741ea3c09", "name": "TestSpend", "username": "asd", "archived": false}, "currency": "RUB", "amount": 1234, "description": "TestDescriptio", "username": "asd"}'

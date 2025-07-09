@@ -9,6 +9,13 @@ import os
 from tests.api_controller import create_category, create_spending, delete_spending
 from tests.database.spend_db import SpendDb
 import allure
+import logging
+from base_logging_client import BaseClient
+from tests.pages.login_page import LoginPage
+from tests.pages.main_page import MainPage
+from tests.pages.profile_page import ProfilePage
+from tests.pages.signup_page import SignupPage
+from tests.pages.spendings_page import SpendingsPage
 
 
 load_dotenv()
@@ -90,16 +97,6 @@ def created_spend(authenticated_user):
     db_client.delete_category(created_spend.category.id)
 
 
-# @pytest.fixture(scope="function")
-# def page()->Page:
-#     with sync_playwright() as p:
-#         browser = p.chromium.launch(headless=False)
-#         context = browser.new_context()
-#         page = context.new_page()
-#         yield page
-#         browser.close()
-
-
 def allure_logger(config):
     listener = config.pluginmanager.get_plugin("allure_listener")
     return listener.allure_logger
@@ -119,3 +116,44 @@ def pytest_runtest_call(item: Item):
     yield
     allure.dynamic.title(" ".join(item.name.split("_")[1:]).title())
     pass
+
+
+def pytest_configure(config):
+    logging.basicConfig(
+        level=logging.DEBUG,  # или INFO
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%H:%M:%S",
+    )
+
+
+@pytest.fixture(scope="session")
+def client():
+    base_url = os.getenv("API_BASE_URL")
+    token = os.getenv("TOKEN")
+    return BaseClient(base_url=base_url, token=token)
+
+#Pages
+
+@pytest.fixture(scope="function")
+def profile_page(page: Page):
+    return ProfilePage(page)
+
+@pytest.fixture(scope="function")
+def main_page(page: Page):
+    return MainPage(page)
+
+@pytest.fixture(scope="function")
+def login_page(page: Page):
+    return LoginPage(page)
+
+@pytest.fixture(scope="function")
+def signup_page(page: Page):
+    return SignupPage(page)
+
+@pytest.fixture(scope="function")
+def spendings_page(page: Page):
+    return SpendingsPage(page)
+    
+
+
+

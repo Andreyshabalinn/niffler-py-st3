@@ -1,1 +1,0 @@
-{"type":"niffler-spend: Bad request","title":"Not Acceptable","status":406,"detail":"Can`t add over than 8 categories for user: 'asd'","instance":"/api/spends/add"}

@@ -1,1 +1,0 @@
-b'{"spendDate": "2025-07-06T11:07:32.006Z", "category": {"id": "137ecc7d-1268-41ea-9f54-73f3961287f8", "name": "prepare", "username": "asd", "archived": false}, "currency": "KZT", "amount": 4804, "description": "blood", "username": "asd"}'
