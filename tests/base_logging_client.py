@@ -1,5 +1,4 @@
 import logging
-import time
 import requests
 
 logger = logging.getLogger(__name__)
@@ -14,9 +13,16 @@ class BaseClient:
         if token:
             self.headers["Authorization"] = f"Bearer {token}"
 
+    def _mask(self, headers: dict) -> dict:
+        h = headers.copy()
+        if "Authorization" in h:
+            h["Authorization"] = "***"
+        return h
+
     def _log_request(self, method, url, **kwargs):
+        masked_headers = self._mask(kwargs.get("headers", {}))
         logger.info(f"REQUEST: {method} {url}")
-        logger.debug(f"Headers: {kwargs.get('headers')}")
+        logger.debug(f"Headers: {masked_headers}")
         logger.debug(f"Params: {kwargs.get('params')}")
         logger.debug(f"Data: {kwargs.get('data')}")
         logger.debug(f"JSON: {kwargs.get('json')}")
