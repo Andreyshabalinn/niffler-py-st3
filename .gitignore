@@ -58,5 +58,6 @@ venv/
 # IDEs and editors
 .vscode/
 .idea/
+**/allure-results/
 *.sublime-project
 *.sublime-workspace
