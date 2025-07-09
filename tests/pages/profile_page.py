@@ -1,4 +1,3 @@
-import time
 from .base_page import BasePage
 from playwright.sync_api import Locator
 import allure
@@ -20,7 +19,7 @@ class ProfilePage(BasePage):
         )
         self.is_archive_include_checkbox = page.get_by_label("Show archived")
         self.edit_category_input = page.get_by_placeholder("Edit category")
-        self.category_succes_edit_popup = page.get_by_text(f"Category name is changed")
+        self.category_succes_edit_popup = page.get_by_text("Category name is changed")
         self.name_len_error = page.get_by_text(
             "Fullname length has to be not longer that 50 symbols"
         )
@@ -42,7 +41,6 @@ class ProfilePage(BasePage):
         self.category_name_input.fill(category_name)
         self.category_name_input.press("Enter")
         self.page.get_by_text(f"You've added new category: {category_name}").wait_for()
-        time.sleep(3)
 
     @allure.step("Архивируем категорию")
     def archive_category(self, category_name: str):
@@ -64,4 +62,3 @@ class ProfilePage(BasePage):
         self.edit_category_input.fill(new_category_name)
         self.edit_category_input.press("Enter")
         self.category_succes_edit_popup.wait_for()
-        time.sleep(3)

@@ -11,14 +11,14 @@ class SignupPage(LoginPage):
         self.signin_button_link = page.get_by_role("link", name="Sign in")
         self.signup_username_len_error = page.locator(
             "span.form__error",
-            has_text=f"Allowed username length should be from 3 to 50 characters",
+            has_text="Allowed username length should be from 3 to 50 characters",
         )
         self.signup_unmatched_passwords_error = page.locator(
-            "span.form__error", has_text=f"Passwords should be equal"
+            "span.form__error", has_text="Passwords should be equal"
         )
         self.signup_password_len_error = page.locator(
             "span.form__error",
-            has_text=f"Allowed password length should be from 3 to 12 characters",
+            has_text="Allowed password length should be from 3 to 12 characters",
         ).first
 
     @allure.step("Ищем всплывающиц локатор-ошибку 'Пользователь уже существует'")

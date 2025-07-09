@@ -1,13 +1,10 @@
-from playwright.sync_api import Page, expect
-from faker import Faker
-from pages.login_page import LoginPage
-from pages.signup_page import SignupPage
-
-fake = Faker()
 from dotenv import load_dotenv
+from playwright.sync_api import Page
+from faker import Faker
 import os
 import allure
 
+fake = Faker()
 load_dotenv()
 
 base_auth_url = os.getenv("BASE_AUTH_URL")

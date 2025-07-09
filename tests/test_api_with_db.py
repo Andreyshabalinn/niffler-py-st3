@@ -3,7 +3,7 @@ import allure
 from faker import Faker
 from dotenv import load_dotenv
 import os
-from tests.api_controller import (
+from tests.utils.api_controller import (
     create_category,
     create_spending,
     delete_spending,
@@ -23,7 +23,6 @@ faker = Faker()
 @allure.epic("API Niffler")
 @allure.feature("Траты")
 class TestsSpendApi:
-
     @allure.story("Создание траты")
     def test_add_spend(self, authenticated_user):
         amount = 1234

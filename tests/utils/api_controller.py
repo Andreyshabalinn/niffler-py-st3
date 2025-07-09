@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 import allure
 from tests.models.spend import Category, SpendCreate
-from base_logging_client import BaseClient
+from utils.base_logging_client import BaseClient
 
 load_dotenv()
 fake = Faker()

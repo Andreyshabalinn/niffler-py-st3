@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
 from pytest import FixtureDef, FixtureRequest, Item
 import pytest
-from playwright.sync_api import sync_playwright
 from playwright.sync_api import Page
 from faker import Faker
 from dotenv import load_dotenv

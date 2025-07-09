@@ -7,9 +7,7 @@ logger = logging.getLogger(__name__)
 class BaseClient:
     def __init__(self, base_url: str, token: str = None):
         self.base_url = base_url
-        self.headers = {
-            "Accept": "*/*"
-        }
+        self.headers = {"Accept": "*/*"}
         if token:
             self.headers["Authorization"] = f"Bearer {token}"
 

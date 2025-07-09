@@ -5,7 +5,6 @@ import allure
 
 
 class SpendDb:
-
     engine: Engine
 
     def __init__(self, db_url: str):

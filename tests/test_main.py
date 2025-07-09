@@ -1,17 +1,15 @@
-import time
-import allure
+from dotenv import load_dotenv
 from playwright.sync_api import Page
 from faker import Faker
 from datetime import date, datetime, timedelta, timezone
-from pages.spendings_page import SpendingsPage
 from pages.profile_page import ProfilePage
-from api_controller import create_spending, delete_spending
+from utils.api_controller import create_spending, delete_spending
 from database.spend_db import SpendDb
 
-fake = Faker()
-from dotenv import load_dotenv
+import allure
 import os
 
+fake = Faker()
 load_dotenv()
 
 base_url = os.getenv("BASE_URL")
@@ -96,7 +94,6 @@ class TestsDeleteSpends:
 class TestsEditeSpends:
     @allure.story("Успешное редактирование траты")
     def test_edit_spend(self, page: Page, created_spend, spendings_page):
-
         # Входные данные для создаваемой траты
 
         page.reload()
@@ -124,7 +121,6 @@ class TestsEditeSpends:
 
     @allure.story("Редактирование траты с ошибкой")
     def test_edit_spend_with_error(self, page: Page, created_spend, spendings_page):
-
         now = datetime.now(timezone.utc)
         spending_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 

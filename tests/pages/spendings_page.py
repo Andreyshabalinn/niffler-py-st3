@@ -1,4 +1,3 @@
-import time
 import allure
 from .main_page import MainPage
 from playwright.sync_api import Locator
@@ -24,7 +23,7 @@ class SpendingsPage(MainPage):
         self.delete_spending_dialog_button = self.delete_spending_dialog.get_by_role(
             "button", name="Delete"
         )
-        self.delete_spending_popup = page.get_by_text(f"Spendings succesfully deleted")
+        self.delete_spending_popup = page.get_by_text("Spendings succesfully deleted")
         self.select_all_rows_checkbox = page.get_by_role(
             "checkbox", name="select all rows"
         )
@@ -36,7 +35,7 @@ class SpendingsPage(MainPage):
             "button", name="Save changes"
         )
         self.edit_spending_success_popup = page.get_by_text(
-            f"Spending is edited successfully"
+            "Spending is edited successfully"
         )
         self.spending_search_input = page.get_by_placeholder("Search")
         self.spending_currency_filter = page.locator("#currency")
@@ -61,7 +60,6 @@ class SpendingsPage(MainPage):
         spending_date: str,
         spending_description: str,
     ):
-
         self.add_spending_button_link.click()
         self.page.wait_for_url(f"{base_url}spending")
         self.amount_input.fill(spending_amount)
@@ -100,7 +98,6 @@ class SpendingsPage(MainPage):
         new_spending_date: str,
         new_spending_description: str,
     ):
-
         row = (
             self.page.locator("tr")
             .filter(has=self.page.locator(f'span:has-text("{spending_category}")'))
@@ -148,7 +145,6 @@ class SpendingsPage(MainPage):
         spending_description: str,
         new_spending_amount: str,
     ):
-
         row = (
             self.page.locator("tr")
             .filter(has=self.page.locator(f'span:has-text("{spending_category}")'))
