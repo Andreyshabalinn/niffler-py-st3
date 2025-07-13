@@ -1,20 +1,22 @@
 from datetime import datetime, timezone
+import time
 from pytest import FixtureDef, FixtureRequest, Item
 import pytest
 from playwright.sync_api import Page
 from faker import Faker
 from dotenv import load_dotenv
 import os
-from tests.api_controller import create_category, create_spending, delete_spending
+from tests.utils.api_controller import auth_with_token, create_category, create_spending, delete_spending
 from tests.database.spend_db import SpendDb
 import allure
 import logging
-from base_logging_client import BaseClient
+from utils.base_logging_client import BaseClient
 from tests.pages.login_page import LoginPage
 from tests.pages.main_page import MainPage
 from tests.pages.profile_page import ProfilePage
 from tests.pages.signup_page import SignupPage
 from tests.pages.spendings_page import SpendingsPage
+from tests.utils.auth_client import AuthClient
 
 
 load_dotenv()
@@ -27,6 +29,7 @@ global_password = os.getenv("TEST_PASSWORD")
 auth_url = os.getenv("BASE_AUTH_URL")
 base_url = os.getenv("BASE_URL")
 db_url = os.getenv("DB_URL")
+auth_secret=os.getenv("AUTH_SECRET"),
 
 
 @pytest.fixture(scope="function")
@@ -46,6 +49,13 @@ def create_user(page: Page) -> tuple[str, str]:
 
     yield username, password
 
+@pytest.fixture(scope="session")
+def session_token():
+    return auth_with_token()
+
+@pytest.fixture(scope="function")
+def api_client(auth_with_token) -> BaseClient:
+    return BaseClient(base_url=os.getenv("API_BASE_URL"), token=auth_with_token)
 
 @pytest.fixture(scope="function")
 def authenticated_user(page: Page, create_user: tuple[str, str]) -> tuple[str, str]:
@@ -61,7 +71,6 @@ def authenticated_user(page: Page, create_user: tuple[str, str]) -> tuple[str, s
     page.wait_for_url(f"{base_url}main")
 
     yield username, password
-
 
 @pytest.fixture(scope="function")
 def created_category(authenticated_user: tuple[str, str]) -> tuple[str, str]:
