@@ -1,19 +1,18 @@
 import uuid
 from faker import Faker
-from dotenv import load_dotenv
-import os
+
 import allure
 from tests.models.spend import Category, SpendCreate
 from tests.utils.auth_client import auth_with_token
 from utils.base_logging_client import BaseClient
 
-load_dotenv()
+from tests.config import TOKEN, API_BASE_URL, USERNAME, PASSWORD
 fake = Faker()
 
-token = os.getenv("TOKEN")
-base_url = os.getenv("API_BASE_URL")
-global_user = os.getenv("TEST_LOGIN")
-global_password = os.getenv("TEST_PASSWORD")
+token = TOKEN
+base_url = API_BASE_URL
+global_user = USERNAME
+global_password = PASSWORD
 
 
 client = BaseClient(base_url=base_url, token=auth_with_token())

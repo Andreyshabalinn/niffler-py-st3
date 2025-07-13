@@ -5,16 +5,16 @@ import re
 import allure
 from urllib.parse import urlparse, parse_qs
 from requests import Session
-from dotenv import load_dotenv
-load_dotenv()
+from tests.config import USERNAME, PASSWORD, AUTH_URL, AUTH_SECRET
 
+username = USERNAME
+password = PASSWORD
+auth_url = AUTH_URL
+auth_sercet = AUTH_SECRET
 
-
-
-env = dict(os.environ)
 
 def auth_with_token():
-    token = AuthClient().auth(env.get("TEST_LOGIN"), env.get("TEST_PASSWORD"))
+    token = AuthClient().auth(username, password)
     allure.attach(token, name="token.txt", attachment_type=allure.attachment_type.TEXT)
     return token
 
@@ -37,7 +37,7 @@ class AuthSession(Session):
 class AuthClient:
     def __init__(self):
         self.session = AuthSession()
-        self.domain_url = env.get("BASE_AUTH_URL")
+        self.domain_url = AUTH_URL
         self.code_verifier = base64.urlsafe_b64encode(os.urandom(32)).decode('utf-8')
         self.code_verifier = re.sub('[^a-zA-Z0-9]+', '', self.code_verifier)
 
@@ -45,7 +45,7 @@ class AuthClient:
         self.code_challenge = base64.urlsafe_b64encode(self.code_challenge).decode('utf-8')
         self.code_challenge = self.code_challenge.replace('=', '')
 
-        self._basic_token = base64.b64encode(env.get("AUTH_SECRET").encode('utf-8')).decode('utf-8')
+        self._basic_token = base64.b64encode(auth_sercet.encode('utf-8')).decode('utf-8')
         self.authorization_basic = {"Authorization": f"Basic {self._basic_token}"}
         self.token = None
 

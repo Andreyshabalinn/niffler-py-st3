@@ -3,8 +3,6 @@ from pytest import FixtureDef, FixtureRequest, Item
 import pytest
 from playwright.sync_api import Page
 from faker import Faker
-from dotenv import load_dotenv
-import os
 from tests.utils.api_controller import auth_with_token, create_category, create_spending, delete_spending
 from tests.database.spend_db import SpendDb
 import allure
@@ -15,27 +13,22 @@ from tests.pages.main_page import MainPage
 from tests.pages.profile_page import ProfilePage
 from tests.pages.signup_page import SignupPage
 from tests.pages.spendings_page import SpendingsPage
-
-
-load_dotenv()
+from tests.config import USERNAME, PASSWORD, AUTH_URL, API_BASE_URL, BASE_URL, DB_URL, TOKEN
 fake = Faker()
 
-
-global_user = os.getenv("TEST_LOGIN")
-global_password = os.getenv("TEST_PASSWORD")
-
-auth_url = os.getenv("BASE_AUTH_URL")
-base_url = os.getenv("BASE_URL")
-db_url = os.getenv("DB_URL")
-auth_secret=os.getenv("AUTH_SECRET")
+auth_url = AUTH_URL
+api_url = API_BASE_URL
+base_url = BASE_URL
+db_url = DB_URL
+token = TOKEN
 
 
 @pytest.fixture(scope="function")
 def create_user(page: Page) -> tuple[str, str]:
     page.goto(f"{auth_url}register")
 
-    username = global_user
-    password = global_password 
+    username = USERNAME
+    password = PASSWORD 
 
     yield username, password
 
@@ -45,7 +38,7 @@ def session_token():
 
 @pytest.fixture(scope="function")
 def api_client(auth_with_token) -> BaseClient:
-    return BaseClient(base_url=os.getenv("API_BASE_URL"), token=auth_with_token)
+    return BaseClient(base_url=api_url, token=auth_with_token)
 
 @pytest.fixture(scope="function")
 def authenticated_user(page: Page, create_user: tuple[str, str]) -> tuple[str, str]:
@@ -118,7 +111,7 @@ def pytest_runtest_call(item: Item):
 
 def pytest_configure(config):
     logging.basicConfig(
-        level=logging.DEBUG,  # или INFO
+        level=logging.DEBUG,
         format="%(asctime)s [%(levelname)s] %(message)s",
         datefmt="%H:%M:%S",
     )
@@ -126,8 +119,7 @@ def pytest_configure(config):
 
 @pytest.fixture(scope="session")
 def client():
-    base_url = os.getenv("API_BASE_URL")
-    token = os.getenv("TOKEN")
+    base_url = api_url
     return BaseClient(base_url=base_url, token=token)
 
 #Pages

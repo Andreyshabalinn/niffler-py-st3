@@ -1,12 +1,9 @@
 import allure
 from .main_page import MainPage
 from playwright.sync_api import Locator
-import os
-from dotenv import load_dotenv
+from tests.config import BASE_URL
 
-load_dotenv()
-
-base_url = os.getenv("BASE_URL")
+base_url = BASE_URL
 
 
 class SpendingsPage(MainPage):

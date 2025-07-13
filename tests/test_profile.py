@@ -1,15 +1,12 @@
 from playwright.sync_api import Page
 from faker import Faker
+from tests.config import BASE_URL
 
-
-from dotenv import load_dotenv
-import os
 import allure
 
 
 fake = Faker()
-load_dotenv()
-base_url = os.getenv("BASE_URL")
+base_url = BASE_URL
 
 
 @allure.epic("Страница профиля")

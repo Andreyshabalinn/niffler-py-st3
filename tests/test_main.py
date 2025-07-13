@@ -1,19 +1,17 @@
-from dotenv import load_dotenv
 from playwright.sync_api import Page
 from faker import Faker
 from datetime import date, datetime, timedelta, timezone
 from pages.profile_page import ProfilePage
 from utils.api_controller import create_spending, delete_spending
 from database.spend_db import SpendDb
+from tests.config import BASE_URL, DB_URL
 
 import allure
-import os
 
 fake = Faker()
-load_dotenv()
 
-base_url = os.getenv("BASE_URL")
-db_url = os.getenv("DB_URL")
+base_url = BASE_URL
+db_url = DB_URL
 
 
 @allure.epic("Страница трат")
