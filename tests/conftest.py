@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-import time
 from pytest import FixtureDef, FixtureRequest, Item
 import pytest
 from playwright.sync_api import Page
@@ -16,7 +15,6 @@ from tests.pages.main_page import MainPage
 from tests.pages.profile_page import ProfilePage
 from tests.pages.signup_page import SignupPage
 from tests.pages.spendings_page import SpendingsPage
-from tests.utils.auth_client import AuthClient
 
 
 load_dotenv()
@@ -29,23 +27,15 @@ global_password = os.getenv("TEST_PASSWORD")
 auth_url = os.getenv("BASE_AUTH_URL")
 base_url = os.getenv("BASE_URL")
 db_url = os.getenv("DB_URL")
-auth_secret=os.getenv("AUTH_SECRET"),
+auth_secret=os.getenv("AUTH_SECRET")
 
 
 @pytest.fixture(scope="function")
 def create_user(page: Page) -> tuple[str, str]:
     page.goto(f"{auth_url}register")
 
-    username = global_user  # fake.user_name()
-    password = global_password  # fake.password()
-
-    # Первый раз надо раскомментировать и создать пользователя
-    # signup_page = SignupPage(page)
-    # signup_page.signup(username, password)
-
-    # page.wait_for_url("http://frontend.niffler.dc/main")
-    # page.wait_for_url("http://auth.niffler.dc:9000/login")
-    # assert page.title() == "Login to Niffler"
+    username = global_user
+    password = global_password 
 
     yield username, password
 

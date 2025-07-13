@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 import allure
 from tests.models.spend import Category, SpendCreate
-from tests.utils.auth_client import AuthClient, auth_with_token
+from tests.utils.auth_client import auth_with_token
 from utils.base_logging_client import BaseClient
 
 load_dotenv()

@@ -4,12 +4,8 @@ from faker import Faker
 from dotenv import load_dotenv
 import os
 from tests.utils.api_controller import (
-    create_category,
     create_spending,
     delete_spending,
-    edit_spending,
-    edit_category_name,
-    get_categories,
 )
 from tests.database.spend_db import SpendDb
 
