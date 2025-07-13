@@ -2,12 +2,21 @@ import base64
 import hashlib
 import os
 import re
+import allure
 from urllib.parse import urlparse, parse_qs
 from requests import Session
 from dotenv import load_dotenv
 load_dotenv()
 
+
+
+
 env = dict(os.environ)
+
+def auth_with_token():
+    token = AuthClient().auth(env.get("TEST_LOGIN"), env.get("TEST_PASSWORD"))
+    allure.attach(token, name="token.txt", attachment_type=allure.attachment_type.TEXT)
+    return token
 
 class AuthSession(Session):
     def __init__(self, *args, **kwargs):

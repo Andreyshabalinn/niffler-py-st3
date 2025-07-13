@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 import allure
 from tests.models.spend import Category, SpendCreate
-from tests.utils.auth_client import AuthClient
+from tests.utils.auth_client import AuthClient, auth_with_token
 from utils.base_logging_client import BaseClient
 
 load_dotenv()
@@ -15,10 +15,6 @@ base_url = os.getenv("API_BASE_URL")
 global_user = os.getenv("TEST_LOGIN")
 global_password = os.getenv("TEST_PASSWORD")
 
-def auth_with_token():
-    token = AuthClient().auth(global_user, global_password)
-    allure.attach(token, name="token.txt", attachment_type=allure.attachment_type.TEXT)
-    return token
 
 client = BaseClient(base_url=base_url, token=auth_with_token())
 
