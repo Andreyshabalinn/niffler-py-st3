@@ -1,24 +1,19 @@
 from datetime import datetime, timezone
 import allure
 from faker import Faker
-from dotenv import load_dotenv
-import os
 from tests.utils.api_controller import (
     create_category,
     create_spending,
     delete_spending,
-    edit_spending,
     edit_category_name,
+    edit_spending,
     get_categories,
 )
 from tests.database.spend_db import SpendDb
+from tests.config import DB_URL
 
-
-load_dotenv()
-
-db_url = os.getenv("DB_URL")
 faker = Faker()
-
+db_url = DB_URL
 
 @allure.epic("API Niffler")
 @allure.feature("Траты")
@@ -33,7 +28,7 @@ class TestsSpendApi:
         spend_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
         spend = create_spending(
-            authenticated_user=authenticated_user,
+            authenticated_user = authenticated_user,
             spend_amount=amount,
             spend_category=category,
             spend_currency=currency,

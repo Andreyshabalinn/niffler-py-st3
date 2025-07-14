@@ -1,14 +1,12 @@
-from dotenv import load_dotenv
 from playwright.sync_api import Page
 from faker import Faker
-import os
+from tests.config import BASE_URL, AUTH_URL
 import allure
 
 fake = Faker()
-load_dotenv()
 
-base_auth_url = os.getenv("BASE_AUTH_URL")
-base_url = os.getenv("BASE_URL")
+base_auth_url = AUTH_URL
+base_url = BASE_URL
 
 
 @allure.epic("Форма авторизации")
