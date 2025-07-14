@@ -10,16 +10,17 @@ from tests.utils.api_controller import (
     get_categories,
 )
 from tests.database.spend_db import SpendDb
-from tests.config import DB_URL
+from tests.config import DB_URL, USERNAME
 
 faker = Faker()
 db_url = DB_URL
+global_user = USERNAME
 
 @allure.epic("API Niffler")
 @allure.feature("Траты")
 class TestsSpendApi:
     @allure.story("Создание траты")
-    def test_add_spend(self, authenticated_user):
+    def test_add_spend(self):
         amount = 1234
         category = "TestSpend"
         currency = "RUB"
@@ -28,7 +29,6 @@ class TestsSpendApi:
         spend_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
         spend = create_spending(
-            authenticated_user = authenticated_user,
             spend_amount=amount,
             spend_category=category,
             spend_currency=currency,
@@ -49,7 +49,7 @@ class TestsSpendApi:
         db_client.delete_category(spend.category.id)
 
     @allure.story("Создание траты")
-    def test_edit_spend(self, created_spend, authenticated_user):
+    def test_edit_spend(self, created_spend):
         new_amount = 1234
         new_category = "TestSpendCat"
         new_currency = "RUB"
@@ -58,7 +58,6 @@ class TestsSpendApi:
         spend_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
         edit_spending(
-            authenticated_user,
             spend_amount=new_amount,
             spend_category=new_category,
             spend_currency=new_currency,
@@ -86,8 +85,8 @@ class TestsSpendApi:
 @allure.epic("API Niffler")
 @allure.feature("Категории")
 class TestsCategoryApi:
-    def test_add_category(self, authenticated_user):
-        _, created_category_id = create_category(authenticated_user)
+    def test_add_category(self):
+        _, created_category_id = create_category()
         db_client = SpendDb(db_url)
         db_category = db_client.get_category_by_id(created_category_id)
         assert db_category.id == created_category_id
@@ -100,8 +99,41 @@ class TestsCategoryApi:
         )
         assert edited_category.name == new_category_name
 
-    def test_get_all(self, created_category, authenticated_user):
+    def test_get_all(self, created_category):
         categories = get_categories()
         db_client = SpendDb(db_url)
-        db_categories = db_client.get_categories(authenticated_user[0])
+        db_categories = db_client.get_categories(global_user)
         assert len(db_categories) == len(categories)
+
+# class TestsNew:
+#     def test_add_invalid_category(self):
+#         pass
+
+#     def test_add_existing_category(self):
+#         pass
+
+#     def test_update_invalid_category(self):
+#         pass
+
+#     def test_update_to_existing_category(self):
+#         pass
+
+#     def add_invalid_spend(self):
+#         pass
+
+#     def edit_invalid_spend(self):
+#         pass
+
+#     def edit_non_existing_spend(self):
+#         pass
+
+#     def get_spend(self):
+#         pass
+
+#     def get_non_existing_spend(self):
+#         pass
+
+#     def get_all_spends(self):
+#         pass
+
+    

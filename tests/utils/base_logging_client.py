@@ -1,16 +1,20 @@
 import logging
 import requests
 
+from tests.utils.sessions import BaseSession
+
 logger = logging.getLogger(__name__)
 
 
 class BaseClient:
     def __init__(self, base_url: str, token: str = None):
+        self.session = BaseSession(base_url=base_url)
         self.base_url = base_url
+
         self.headers = {"Accept": "*/*"}
-        
         if token:
             self.headers["Authorization"] = f"Bearer {token}"
+        self.session.headers.update(self.headers)
 
     def _mask(self, headers: dict) -> dict:
         h = headers.copy()
@@ -31,13 +35,9 @@ class BaseClient:
         logger.debug(f"Response body: {response.text}")
 
     def request(self, method: str, path: str, **kwargs) -> requests.Response:
-        url = f"{self.base_url}{path}"
-        kwargs.setdefault("headers", self.headers)
+        self._log_request(method, self.base_url + path, **kwargs)
 
-        self._log_request(method, url, **kwargs)
-
-        response = requests.request(method, url, **kwargs)
+        response = self.session.request(method, path, **kwargs)
 
         self._log_response(response)
-
         return response
