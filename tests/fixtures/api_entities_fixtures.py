@@ -1,3 +1,4 @@
+import time
 import pytest
 from tests.utils.api_controller import create_category, create_spending, delete_spending
 from tests.database.spend_db import SpendDb
@@ -15,7 +16,7 @@ token = TOKEN
 
 @pytest.fixture(scope="function")
 def created_category() -> tuple[str, str]:
-    category_name, category_id = create_category()
+    category_name, category_id = create_category(fake.word())
     yield category_name, category_id
     db_client = SpendDb(db_url)
     db_client.delete_category(category_id)

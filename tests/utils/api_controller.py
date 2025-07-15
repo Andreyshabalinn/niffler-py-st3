@@ -30,9 +30,10 @@ def edit_category_name(category_name: str, category_id: str):
         "archived": False,
     }
     result = client.request("PATCH", "categories/update", json=payload)
-    assert result.status_code == 200
-    category = Category.model_validate(result.json())
-    return category
+    if result.status_code == 200:
+        category = Category.model_validate(result.json())
+        return category
+    return result
 
 def archive_category(category_name: str, category_id: str):
     payload = {
@@ -44,15 +45,15 @@ def archive_category(category_name: str, category_id: str):
     result = client.request("PATCH", "categories/update", json=payload)
     assert result.status_code == 200
 
-def create_category() -> tuple[str, uuid.UUID]:
+def create_category(category_name: str) -> tuple[str, uuid.UUID]:
     username = global_user
-    name = fake.word()
+    name = category_name
     payload = {"name": name, "username": username, "archived": False}
     result = client.request("POST", "categories/add", json=payload)
-    assert result.status_code == 200, result.status_code
-    parsed = Category.model_validate(result.json())
-    return parsed.name, parsed.id
-
+    if result.status_code == 200:
+        parsed = Category.model_validate(result.json())
+        return parsed.name, parsed.id
+    return result
 
 def create_spending(
     spend_amount: str,
@@ -65,7 +66,6 @@ def create_spending(
     payload = {
         "spendDate": spend_date,
         "category": {
-            "id": str(uuid.uuid4()),
             "name": spend_category,
             "username": username,
             "archived": False,
@@ -76,8 +76,9 @@ def create_spending(
         "username": username,
     }
     result = client.request("POST", "spends/add", json=payload)
-    assert result.status_code == 201, result.status_code
-    return SpendCreate.model_validate(result.json())
+    if result.status_code == 201:
+        return SpendCreate.model_validate(result.json())
+    return result
 
 def edit_spending(
     spend_amount: str,
@@ -92,7 +93,6 @@ def edit_spending(
         "id": spend_id,
         "spendDate": spend_date,
         "category": {
-            "id": str(uuid.uuid4()),
             "name": spend_category,
             "username": username,
             "archived": False,
@@ -103,9 +103,15 @@ def edit_spending(
         "username": username,
     }
     result = client.request("PATCH", "spends/edit", json=payload)
-    assert result.status_code == 200, result.request.body
-    return SpendCreate.model_validate(result.json())
+    if result.status_code == 200:
+        return SpendCreate.model_validate(result.json())
+    return result
+
+def get_spend(spending_id: str):
+    result = client.request("GET", f"spends/{spending_id}")
+    if result.status_code == 200:
+        return SpendCreate.model_validate(result.json())
+    return result
 
 def delete_spending(spending_id: str):
-    result = client.request("DELETE", "spends/remove", params={"ids": spending_id})
-    assert result.status_code == 200
+    client.request("DELETE", "spends/remove", params={"ids": spending_id})
