@@ -110,6 +110,8 @@ class TestsCategoryApi:
         db_categories = db_client.get_categories(global_user)
         assert len(db_categories) == len(categories)
 
+@allure.epic("API Niffler")
+@allure.feature("Новые тесты")
 class TestsNew:
     def test_add_invalid_category(self):
         with pytest.raises(HTTPError) as exc_info:
