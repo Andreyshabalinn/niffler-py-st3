@@ -1,4 +1,3 @@
-import time
 import pytest
 from tests.utils.api_controller import create_category, create_spending, delete_spending
 from tests.database.spend_db import SpendDb

@@ -1,6 +1,4 @@
 from datetime import datetime, timezone
-import time
-from typing import ByteString
 from requests import HTTPError
 import allure
 import pytest

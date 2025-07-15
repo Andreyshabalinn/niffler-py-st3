@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-from uuid import UUID
 from sqlmodel import SQLModel, Field, Relationship
 from pydantic import field_validator
 from typing import Optional

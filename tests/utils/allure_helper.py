@@ -1,7 +1,6 @@
 import json
 import logging
 from json import JSONDecodeError
-from sqlalchemy.dialects import postgresql
 
 import allure
 import curlify
