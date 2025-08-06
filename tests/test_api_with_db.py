@@ -102,11 +102,27 @@ class TestsCategoryApi:
         )
         assert edited_category.name == new_category_name
 
+    @pytest.mark.serial
     def test_get_all(self, created_category):
         categories = get_categories()
         db_client = SpendDb(db_url)
         db_categories = db_client.get_categories(global_user)
         assert len(db_categories) == len(categories)
+
+    def test_get_all_and_check_data(self, worker_id):
+        category_name_1, category_id_1 = create_category(category_name=faker.word() + worker_id)
+        category_name_2, category_id_2 = create_category(category_name=faker.word() + worker_id + " second")
+        db_client = SpendDb(db_url)
+        db_category_1 = db_client.get_category_by_id(category_id_1)
+        db_category_2 = db_client.get_category_by_id(category_id_2)
+
+        assert str(db_category_1.id) == category_id_1
+        assert str(db_category_2.id) == category_id_2
+        assert str(db_category_1.name) == category_name_1
+        assert str(db_category_2.name) == category_name_2
+
+        db_client.delete_category(db_category_1.id)
+        db_client.delete_category(db_category_2.id)
 
 @allure.epic("API Niffler")
 @allure.feature("Новые тесты")

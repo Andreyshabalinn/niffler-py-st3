@@ -1,5 +1,6 @@
 from pytest import FixtureDef, FixtureRequest, Item
 import pytest
+import os
 from playwright.sync_api import Page
 from faker import Faker
 from tests.utils.allure_helper import allure_logger
@@ -39,6 +40,24 @@ def pytest_configure(config):
 # def client():
 #     base_url = api_url
 #     return BaseClient(base_url=base_url, token=token)
+
+def pytest_collection_modifyitems(config, items):
+    serial = []
+    parallel = []
+
+    for item in items:
+        if 'serial' in item.keywords:
+            serial.append(item)
+        else:
+            parallel.append(item)
+
+    # Запускаем сначала serial (они пойдут в одном процессе, обычно master), потом остальные
+    items[:] = serial + parallel
+
+
+@pytest.fixture(scope="session")
+def worker_id():
+    return os.environ.get("PYTEST_XDIST_WORKER", "gw0")
 
 @pytest.fixture(scope="function")
 def authenticated_user(page: Page) -> tuple[str, str]:
