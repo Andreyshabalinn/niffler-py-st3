@@ -1,6 +1,6 @@
 from playwright.sync_api import Page
 from faker import Faker
-from tests.config import BASE_URL, AUTH_URL
+from tests.config import BASE_URL, AUTH_URL, USERNAME, PASSWORD
 import allure
 
 fake = Faker()
@@ -13,9 +13,9 @@ base_url = BASE_URL
 @allure.feature("Авторизация")
 class TestsAuth:
     @allure.story("Успешная авторизация")
-    def test_successful_signin(self, page: Page, create_user: tuple[str, str], login_page):
+    def test_successful_signin(self, page: Page, login_page):
 
-        user, password = create_user
+        user, password = USERNAME, PASSWORD
 
         page.goto(f"{base_auth_url}login")
         login_page.login(user, password)

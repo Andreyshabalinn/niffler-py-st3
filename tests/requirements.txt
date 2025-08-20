@@ -23,6 +23,7 @@ pydantic_core==2.33.2
 pyee==13.0.0
 Pygments==2.19.1
 pytest==8.4.1
+pytest-xdist
 pytest-base-url==2.1.0
 pytest-playwright==0.7.0
 python-dotenv==1.1.0

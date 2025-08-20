@@ -1,12 +1,12 @@
-from datetime import datetime
-from uuid import UUID
+from datetime import datetime, timezone
 from sqlmodel import SQLModel, Field, Relationship
+from pydantic import field_validator
 from typing import Optional
 
 
 class Category(SQLModel, table=True):
     __tablename__ = "category"
-    id: UUID = Field(primary_key=True)
+    id: str = Field(primary_key=True)
     name: str
     username: str
     archived: bool
@@ -34,3 +34,15 @@ class SpendCreate(SQLModel):
     description: str
     username: str
     category: Category
+
+    @field_validator("spendDate")
+    @classmethod
+    def normalize_spend_date(cls, v: datetime) -> datetime:
+        # Приводим к UTC
+        if v.tzinfo is None:
+            v = v.replace(tzinfo=timezone.utc)
+        else:
+            v = v.astimezone(timezone.utc)
+
+        # Округляем до минут
+        return v.replace(second=0, microsecond=0)

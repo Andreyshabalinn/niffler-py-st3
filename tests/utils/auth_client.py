@@ -1,16 +1,15 @@
 import base64
-import hashlib
-import os
-import re
+import pkce
 import allure
-from urllib.parse import urlparse, parse_qs
-from requests import Session
-from tests.config import USERNAME, PASSWORD, AUTH_URL, AUTH_SECRET
+from tests.config import USERNAME, PASSWORD, AUTH_URL, AUTH_SECRET, BASE_URL
+from tests.models.oauth import OAuthRequest
+from tests.utils.sessions import AuthSession
 
 username = USERNAME
 password = PASSWORD
 auth_url = AUTH_URL
 auth_sercet = AUTH_SECRET
+frontend_url = BASE_URL
 
 
 def auth_with_token():
@@ -18,68 +17,43 @@ def auth_with_token():
     allure.attach(token, name="token.txt", attachment_type=allure.attachment_type.TEXT)
     return token
 
-class AuthSession(Session):
-    def __init__(self, *args, **kwargs):
-        super().__init__()
-        self.code = None
-
-    def request(self, method, url, **kwargs):
-        response = super().request(method, url, **kwargs)
-        for r in response.history:
-            cookies = r.cookies.get_dict()
-            self.cookies.update(cookies)
-            code = parse_qs(urlparse(r.headers.get("Location")).query).get("code", None)
-            if code:
-                self.code = code
-        return response
-
-
 class AuthClient:
     def __init__(self):
-        self.session = AuthSession()
-        self.domain_url = AUTH_URL
-        self.code_verifier = base64.urlsafe_b64encode(os.urandom(32)).decode('utf-8')
-        self.code_verifier = re.sub('[^a-zA-Z0-9]+', '', self.code_verifier)
+        self.session = AuthSession(base_url=auth_url)
 
-        self.code_challenge = hashlib.sha256(self.code_verifier.encode('utf-8')).digest()
-        self.code_challenge = base64.urlsafe_b64encode(self.code_challenge).decode('utf-8')
-        self.code_challenge = self.code_challenge.replace('=', '')
+        # Переписать с использованием библиотеки
+        self.code_verifier, self.code_challenge = pkce.generate_pkce_pair()
 
         self._basic_token = base64.b64encode(auth_sercet.encode('utf-8')).decode('utf-8')
         self.authorization_basic = {"Authorization": f"Basic {self._basic_token}"}
         self.token = None
 
     def auth(self, username, password):
-        session = AuthSession()
+        self.session.get(
+                    url="/oauth2/authorize",
+                    params=OAuthRequest(
+                        redirect_uri=f"{frontend_url}authorized",
+                        code=self.session.code,
+                        code_challenge=self.code_challenge
+                    ).model_dump(),
+                    allow_redirects=True
+                )
 
-        session.get(
-            url=f"{self.domain_url}oauth2/authorize",
-            params={
-                "response_type": "code",
-                "client_id": "client",
-                "scope": "openid",
-                "redirect_uri": "http://frontend.niffler.dc/authorized",
-                "code_challenge": self.code_challenge,
-                "code_challenge_method": "S256",
-            },
-            allow_redirects=True
-        )
-
-        session.post(
-            url=f"{self.domain_url}login",
+        self.session.post(
+            url="login",
             data={
                 "username": username,
                 "password": password,
-                "_csrf": session.cookies.get("XSRF-TOKEN")
+                "_csrf": self.session.cookies.get("XSRF-TOKEN")
             },
             allow_redirects=True
         )
 
-        token_response = session.post(
-            url=f"{self.domain_url}oauth2/token",
+        token_response = self.session.post(
+            url="oauth2/token",
             data={
-                "code": session.code,
-                "redirect_uri": "http://frontend.niffler.dc/authorized",
+                "code": self.session.code,
+                "redirect_uri": f"{frontend_url}authorized",
                 "code_verifier": self.code_verifier,
                 "grant_type": "authorization_code",
                 "client_id": "client"
