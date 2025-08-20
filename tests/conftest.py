@@ -2,11 +2,13 @@ from pytest import FixtureDef, FixtureRequest, Item
 import pytest
 import os
 from playwright.sync_api import Page
+from tests.utils.kafka_client import KafkaClient
 from faker import Faker
 from tests.utils.allure_helper import allure_logger
 import allure
 import logging
-from tests.config import USERNAME, PASSWORD, AUTH_URL, API_BASE_URL, BASE_URL, DB_URL, TOKEN
+from tests.config import USERNAME, PASSWORD, AUTH_URL, API_BASE_URL, BASE_URL, DB_URL, TOKEN, KAFKA_SERVER
+from tests.utils.auth_client import AuthClient
 fake = Faker()
 
 auth_url = AUTH_URL
@@ -14,6 +16,10 @@ api_url = API_BASE_URL
 base_url = BASE_URL
 db_url = DB_URL
 token = TOKEN
+server_name = KAFKA_SERVER
+
+
+
 
 pytest_plugins = ["tests.fixtures.page_fixtures", "tests.fixtures.api_entities_fixtures"]
 
@@ -40,6 +46,16 @@ def pytest_configure(config):
 # def client():
 #     base_url = api_url
 #     return BaseClient(base_url=base_url, token=token)
+
+@pytest.fixture(scope="session")
+def auth_client():
+    return AuthClient()
+
+@pytest.fixture(scope="session")
+def kafka():
+    """Взаимодействие с Kafka"""
+    with KafkaClient(server_name) as k:
+        yield k
 
 def pytest_collection_modifyitems(config, items):
     serial = []
