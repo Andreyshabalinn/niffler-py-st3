@@ -11,6 +11,7 @@ USERNAME = os.getenv("TEST_LOGIN")
 PASSWORD = os.getenv("TEST_PASSWORD")
 
 DB_URL = os.getenv("DB_URL")
+USER_DB_URL = os.getenv("USER_DB_URL")
 
 AUTH_URL = os.getenv("BASE_AUTH_URL")
 CLIENT_ID = os.getenv("CLIENT_ID")

@@ -88,3 +88,17 @@ class KafkaClient:
         logging.info(f'{topic} offsets: {partitions_offsets_event}')
         topic_partitions = [TopicPartition(topic, k, v) for k, v in partitions_offsets_event.items()]
         return topic_partitions
+
+    def delivery_report(self, err, msg):
+        if err is not None:
+            logging.info(f"Ошибка при отправке сообщения: {err}")
+        else:
+            print(f"Сообщение отправлено в {msg.topic()} [{msg.partition()}] с смещением {msg.offset()}")
+
+    def send_message(self, topic: str, username: str):
+        self.producer.produce(topic,
+                              json.dumps(UserName(username=username).model_dump()).encode("utf-8"),
+                              on_delivery=self.delivery_report,
+                              headers={"__TypeId__": "guru.qa.niffler.model.UserJson"},
+                              )
+        self.producer.flush()

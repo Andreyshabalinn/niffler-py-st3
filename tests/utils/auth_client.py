@@ -13,7 +13,10 @@ frontend_url = BASE_URL
 
 
 def auth_with_token():
-    AuthClient().register(username, password)
+    try:
+        AuthClient().register(username, password)
+    except Exception as e:
+        pass
     token = AuthClient().auth(username, password)
     allure.attach(token, name="token.txt", attachment_type=allure.attachment_type.TEXT)
     return token
