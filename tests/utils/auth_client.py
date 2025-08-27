@@ -13,6 +13,10 @@ frontend_url = BASE_URL
 
 
 def auth_with_token():
+    try:
+        AuthClient().register(username, password)
+    except Exception as e:
+        pass
     token = AuthClient().auth(username, password)
     allure.attach(token, name="token.txt", attachment_type=allure.attachment_type.TEXT)
     return token
@@ -62,3 +66,24 @@ class AuthClient:
 
         self.token = token_response.json().get("access_token", None)
         return self.token
+    
+    def register(self, username, password):
+        self.session.get(
+            url=f"{auth_url}/register",
+            params={
+                "redirect_uri": "http://auth.niffler.dc:9000/register",
+            },
+            allow_redirects=True
+        )
+
+        result = self.session.post(
+            url=f"{auth_url}/register",
+            data={
+                "username": username,
+                "password": password,
+                "passwordSubmit": password,
+                "_csrf": self.session.cookies.get("XSRF-TOKEN")
+            },
+            allow_redirects=True
+        )
+        return result
