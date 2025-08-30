@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine, Engine, event
+from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
 from collections.abc import Sequence
-from tests.models.user import User
+from tests.models.user import Friendship, User
 from tests.utils.allure_helper import attach_sql
 
 
@@ -16,3 +17,12 @@ class UsersDb:
         with Session(self.engine) as session:
             statement = select(User).where(User.username == username)
             return session.exec(statement).one()
+
+    def get_friendship(self, user_uuid: str, user_to_uuid: str):
+        with Session(self.engine) as session:
+            statement = select(Friendship).where(Friendship.requester_id == user_uuid,
+                                                 Friendship.addressee_id == user_to_uuid)
+            try:
+                return session.exec(statement).one()
+            except NoResultFound:
+                return None

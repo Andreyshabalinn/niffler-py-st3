@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nif="niffler-userdata">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <nif:declineInvitationRequest>
+            <nif:username>{{ username }}</nif:username>
+            <nif:invitationToBeDeclined>{{ friend }}</nif:invitationToBeDeclined>
+        </nif:declineInvitationRequest>
+    </soapenv:Body>
+</soapenv:Envelope>
