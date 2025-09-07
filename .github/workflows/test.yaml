@@ -3,7 +3,19 @@ name: Niffler pytest
 on:
   pull_request:
     types: [ opened, reopened, synchronize ]
-
+env:
+  BASE_URL: $BASE_URL
+  TOKEN: ${{ secrets.TOKEN }}
+  BASE_AUTH_URL: $BASE_AUTH_URL
+  API_BASE_URL: $API_BASE_URL
+  TEST_LOGIN: $TEST_LOGIN
+  TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+  DB_URL: $DB_URL
+  USER_DB_URL: $USER_DB_URL
+  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+  SERVER_NAME: $SERVER_NAME
+  SOAP_ADDRESS: $SOAP_ADDRESS
+  
 jobs:
   install_dependencies:
     runs-on: ubuntu-latest
