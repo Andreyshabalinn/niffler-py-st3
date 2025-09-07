@@ -53,12 +53,35 @@ jobs:
         
       - name: Run parallel tests
         if: always()
-        run: pytest -n auto tests/test_api_with_db.py --alluredir=allure-results
+        run: pytest -n auto tests/test_api_with_db.py --alluredir=tests/allure-results
         
-      - name: Upload Allure results
+      - name: Load test report history
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: tests/allure-history
+
+      - name: Generate Allure Report
+        if: always()
+        uses: simple-elf/allure-report-action@v1
+        with:
+          allure_results: tests/allure-results
+          allure_history: tests/allure-history
+          allure_report: tests/allure-report
+
+      - name: Upload Allure Report as artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-api
-          path: allure-results
-          name: allure-kafka
-          path: allure-results
+          name: allure-report
+          path: tests/allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: tests/allure-history
