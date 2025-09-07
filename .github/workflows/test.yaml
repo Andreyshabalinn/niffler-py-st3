@@ -53,7 +53,7 @@ jobs:
         
       - name: Run parallel tests
         if: always()
-        run: pytest -n 4 -s -v tests/test_api_with_db.py --alluredir=./allure-results --dist=loadscope
+        run: pytest -s -v tests/test_api_with_db.py --alluredir=./allure-results
         
       - name: Load test report history
         uses: actions/checkout@v3
