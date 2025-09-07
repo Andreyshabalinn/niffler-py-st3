@@ -1,7 +1,7 @@
 import json
 import logging
 
-from allure import step, epic, suite, title, id, tag
+from allure import step, epic, suite, title, tag
 from faker import Faker
 from tests.config import USER_DB_URL
 

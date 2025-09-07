@@ -1,5 +1,7 @@
 from pydantic import BaseModel
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional
+from datetime import date
 
 
 class UserName(BaseModel):
@@ -16,3 +18,10 @@ class User(SQLModel, table=True):
     photo: str | None = None
     photo_small: str | None = None
     full_name: str
+
+
+class Friendship(SQLModel, table=True):
+    requester_id: str = Field(primary_key=True, foreign_key="user.id")
+    addressee_id: str = Field(primary_key=True, foreign_key="user.id")
+    status: str
+    created_date: date

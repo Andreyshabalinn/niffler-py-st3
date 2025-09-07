@@ -50,3 +50,15 @@ class AuthSession(BaseSession):
                     self.code = code_list[0]
 
         return response
+
+class SoapSession(Session):
+    """Сессия с передачей base_url и логированием запроса, ответа, хедеров ответа."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+        self.base_url = kwargs.pop("base_url", "")
+        self.headers.update({'Content-Type': 'text/xml;charset=UTF-8'})
+
+    def request(self, method='POST', url='', **kwargs):
+        """Логирование запроса, метод POST для всех"""
+        return super().request(method, self.base_url + url, **kwargs)

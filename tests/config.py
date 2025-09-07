@@ -19,4 +19,6 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 AUTH_SECRET = os.getenv("AUTH_SECRET")
 
 KAFKA_SERVER = os.getenv("SERVER_NAME")
+
+SOAP_ADDRESS = os.getenv("SOAP_ADDRESS")
  
