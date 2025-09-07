@@ -4,17 +4,17 @@ on:
   pull_request:
     types: [ opened, reopened, synchronize ]
 env:
-  BASE_URL: ${{ env.TOKEN }}
+  BASE_URL: ${{ vars.TOKEN }}
   TOKEN: ${{ secrets.TOKEN }}
-  BASE_AUTH_URL: ${{ env.TOKEN }}
-  API_BASE_URL: ${{ env.TOKEN }}
-  TEST_LOGIN: ${{ env.TOKEN }}
+  BASE_AUTH_URL: ${{ vars.TOKEN }}
+  API_BASE_URL: ${{ vars.TOKEN }}
+  TEST_LOGIN: ${{ vars.TOKEN }}
   TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-  DB_URL: ${{ env.TOKEN }}
-  USER_DB_URL: ${{ env.TOKEN }}
+  DB_URL: ${{ vars.TOKEN }}
+  USER_DB_URL: ${{ vars.TOKEN }}
   AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-  SERVER_NAME: ${{ env.TOKEN }}
-  SOAP_ADDRESS: ${{ env.TOKEN }}
+  SERVER_NAME: ${{ vars.TOKEN }}
+  SOAP_ADDRESS: ${{ vars.TOKEN }}
   
 jobs:
   install_dependencies:
