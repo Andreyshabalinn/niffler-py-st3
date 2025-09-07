@@ -4,17 +4,17 @@ on:
   pull_request:
     types: [ opened, reopened, synchronize ]
 env:
-  BASE_URL: ${{ vars.TOKEN }}
+  BASE_URL: http://frontend.niffler.dc/
   TOKEN: ${{ secrets.TOKEN }}
-  BASE_AUTH_URL: ${{ vars.TOKEN }}
-  API_BASE_URL: ${{ vars.TOKEN }}
-  TEST_LOGIN: ${{ vars.TOKEN }}
+  BASE_AUTH_URL: http://auth.niffler.dc:9000/
+  API_BASE_URL: http://gateway.niffler.dc:8090/api/
+  TEST_LOGIN: asd
   TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-  DB_URL: ${{ vars.TOKEN }}
-  USER_DB_URL: ${{ vars.TOKEN }}
+  DB_URL: postgresql://postgres:secret@localhost:5432/niffler-spend
+  USER_DB_URL: postgresql://postgres:secret@localhost:5432/niffler-userdata
   AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-  SERVER_NAME: ${{ vars.TOKEN }}
-  SOAP_ADDRESS: ${{ vars.TOKEN }}
+  SERVER_NAME: localhost
+  SOAP_ADDRESS: http://localhost:8089/ws
   
 jobs:
   install_dependencies:
