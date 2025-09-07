@@ -4,17 +4,17 @@ on:
   pull_request:
     types: [ opened, reopened, synchronize ]
 env:
-  BASE_URL: $BASE_URL
+  BASE_URL: ${{ env.TOKEN }}
   TOKEN: ${{ secrets.TOKEN }}
-  BASE_AUTH_URL: $BASE_AUTH_URL
-  API_BASE_URL: $API_BASE_URL
-  TEST_LOGIN: $TEST_LOGIN
+  BASE_AUTH_URL: ${{ env.TOKEN }}
+  API_BASE_URL: ${{ env.TOKEN }}
+  TEST_LOGIN: ${{ env.TOKEN }}
   TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-  DB_URL: $DB_URL
-  USER_DB_URL: $USER_DB_URL
+  DB_URL: ${{ env.TOKEN }}
+  USER_DB_URL: ${{ env.TOKEN }}
   AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-  SERVER_NAME: $SERVER_NAME
-  SOAP_ADDRESS: $SOAP_ADDRESS
+  SERVER_NAME: ${{ env.TOKEN }}
+  SOAP_ADDRESS: ${{ env.TOKEN }}
   
 jobs:
   install_dependencies:
