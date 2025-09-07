@@ -50,68 +50,15 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r tests/requirements.txt
-
-  ui_tests:
-    runs-on: ubuntu-latest
-    needs: build-and-setup
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-          cache: 'pip'
-      - name: Run UI tests
-        run: pytest tests/ui --alluredir=allure-results
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-ui
-          path: allure-results
-
-  api_tests:
-    runs-on: ubuntu-latest
-    needs: build-and-setup
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-          cache: 'pip'
-      - name: Install dependencies
-        run: pip install -r tests/requirements.txt
-      - name: Run API tests (parallel)
+        
+      - name: Run parallel tests
+        if: always()
         run: pytest -n auto tests/test_api_with_db.py --alluredir=allure-results
-
-  soap_tests:
-    runs-on: ubuntu-latest
-    needs: build-and-setup
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-          cache: 'pip'
-      - name: Run SOAP tests
-        run: pytest -n auto tests/test_soap.py --alluredir=allure-results
+        
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
         with:
-          name: allure-soap
+          name: allure-api
           path: allure-results
-
-  kafka_tests:
-    runs-on: ubuntu-latest
-    needs: build-and-setup
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-          cache: 'pip'
-      - name: Run Kafka tests
-        run: pytest tests/tes_kafka.py --alluredir=allure-results
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
-        with:
           name: allure-kafka
           path: allure-results
