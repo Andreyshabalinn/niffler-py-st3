@@ -17,9 +17,26 @@ env:
   SOAP_ADDRESS: http://localhost:8089/ws
   
 jobs:
-  install_dependencies:
+  build-and-setup:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build backends
+        run: |
+          bash docker-compose-dev.sh
+
+      - name: Edit hosts file
+        run: |
+          echo -e "127.0.0.1\tlocalhost\n127.0.0.1\tfrontend.niffler.dc\n127.0.0.1\tauth.niffler.dc\n127.0.0.1\tgateway.niffler.dc\n127.0.0.1\tkafka" | sudo tee -a /etc/hosts
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -36,7 +53,7 @@ jobs:
 
   ui_tests:
     runs-on: ubuntu-latest
-    needs: install_dependencies
+    needs: build-and-setup
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -53,7 +70,7 @@ jobs:
 
   api_tests:
     runs-on: ubuntu-latest
-    needs: install_dependencies
+    needs: build-and-setup
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -67,7 +84,7 @@ jobs:
 
   soap_tests:
     runs-on: ubuntu-latest
-    needs: install_dependencies
+    needs: build-and-setup
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -84,7 +101,7 @@ jobs:
 
   kafka_tests:
     runs-on: ubuntu-latest
-    needs: install_dependencies
+    needs: build-and-setup
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
