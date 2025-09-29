@@ -75,6 +75,11 @@ class AuthClient:
             self.token = token_response.json().get("access_token", None)
         else:
             print(f"СТАТУС КОД: {token_response.status_code}")
+            ct = token_response.headers.get("content-type", "")
+            print("STATUS:", token_response.status_code, "CT:", ct, "URL:", token_response.url)
+            print(token_response.text[:300])
+            if "text/html" in ct:
+                raise AssertionError("Попали не в auth: получили HTML вместо JSON от /oauth2/token")
             print(token_response.text)
         return self.token
     
