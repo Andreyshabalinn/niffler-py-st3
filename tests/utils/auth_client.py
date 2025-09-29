@@ -34,7 +34,7 @@ class AuthClient:
 
     def auth(self, username, password):
         self.session.get(
-                    url="/oauth2/authorize",
+                    url="oauth2/authorize",
                     params=OAuthRequest(
                         redirect_uri=f"{frontend_url}authorized",
                         code=self.session.code,
@@ -54,7 +54,7 @@ class AuthClient:
         )
 
         token_response = self.session.post(
-            url=f"{auth_url}/oauth2/token",
+            url=f"{auth_url}oauth2/token",
             data={
                 "code": self.session.code,
                 "redirect_uri": f"{frontend_url}authorized",
@@ -88,7 +88,7 @@ class AuthClient:
         )
 
         result = self.session.post(
-            url=f"{auth_url}/register",
+            url=f"{auth_url}register",
             data={
                 "username": username,
                 "password": password,
