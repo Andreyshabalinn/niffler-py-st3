@@ -54,7 +54,7 @@ class AuthClient:
         )
 
         token_response = self.session.post(
-            url="oauth2/token",
+            url=f"{auth_url}/oauth2/token",
             data={
                 "code": self.session.code,
                 "redirect_uri": f"{frontend_url}authorized",
@@ -64,11 +64,11 @@ class AuthClient:
             },
         )
         if token_response.status_code == 200:
-            print("СТАТУС КОД: " + token_response.status_code)
+            print(f"СТАТУС КОД: {token_response.status_code}")
             print(token_response.text)
             self.token = token_response.json().get("access_token", None)
         else:
-            print("СТАТУС КОД: " + token_response.status_code)
+            print(f"СТАТУС КОД: {token_response.status_code}")
             print(token_response.text)
         return self.token
     
