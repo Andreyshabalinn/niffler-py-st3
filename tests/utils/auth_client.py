@@ -81,6 +81,8 @@ class AuthClient:
             if "text/html" in ct:
                 raise AssertionError("Попали не в auth: получили HTML вместо JSON от /oauth2/token")
             print(token_response.text)
+        print("WWW-Authenticate:", token_response.headers.get("www-authenticate"))
+        print("Body:", token_response.text[:400])
         return self.token
     
     def register(self, username, password):
