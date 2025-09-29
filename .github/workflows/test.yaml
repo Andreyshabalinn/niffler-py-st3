@@ -42,19 +42,24 @@ jobs:
         with:
           ref: ${{ env.GITHUB_SHA }}
           
-      - name: Wait for services up (HTTP health)
+      - name: Who listens on 9000?
+        run: |
+          docker ps --format '{{.Names}} -> {{.Ports}}'
+          ss -lntp | grep ':9000' || true
+
+      - name: Probe token endpoint (no redirects)
         run: |
           set -e
-          echo "Waiting for services to be ready..."
-          # Ждём до 180с каждый URL (подставьте реальные health/endpoints)
-          for url in \
-            http://auth.niffler.dc:9000/actuator/health \
-            http://gateway.niffler.dc:8090/actuator/health \
-            http://frontend.niffler.dc/ ; do
-            echo "Waiting for $url ..."
-            timeout 180 bash -c "until curl -sSf $url >/dev/null; do sleep 2; done"
-            echo "OK: $url"
-          done
+          curl -i -sS -X POST "http://auth.niffler.dc:9000/oauth2/token" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            --data "code=FAKE&redirect_uri=http://frontend.niffler.dc/authorized&code_verifier=FAKE&grant_type=authorization_code&client_id=client" \
+            | sed -n '1,25p'
+
+      - name: Auth logs tail
+        run: |
+          docker logs $(docker ps --filter "name=auth" --format "{{.ID}}") --tail=200 || true
+
 
       - name: Setup Python
         uses: actions/setup-python@v5
