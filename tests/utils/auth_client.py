@@ -64,6 +64,8 @@ class AuthClient:
             },
         )
         if token_response.status_code == 200:
+            print("СТАТУС КОД: " + token_response.status_code)
+            print(token_response.text)
             self.token = token_response.json().get("access_token", None)
         else:
             print("СТАТУС КОД: " + token_response.status_code)
