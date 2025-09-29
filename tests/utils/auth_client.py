@@ -63,8 +63,11 @@ class AuthClient:
                 "client_id": "client"
             },
         )
-
-        self.token = token_response.json().get("access_token", None)
+        if token_response.status_code == 200:
+            self.token = token_response.json().get("access_token", None)
+        else:
+            print("СТАТУС КОД: " + token_response.status_code)
+            print(token_response.text)
         return self.token
     
     def register(self, username, password):
