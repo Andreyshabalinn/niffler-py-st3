@@ -54,7 +54,7 @@ class AuthClient:
         )
 
         token_response = self.session.post(
-            url=f"{auth_url}oauth2/token",
+            url="oauth2/token",
             data={
                 "code": self.session.code,
                 "redirect_uri": f"{frontend_url}authorized",
@@ -87,7 +87,7 @@ class AuthClient:
     
     def register(self, username, password):
         self.session.get(
-            url=f"{auth_url}/register",
+            url="register",
             params={
                 "redirect_uri": "http://auth.niffler.dc:9000/register",
             },
@@ -95,7 +95,7 @@ class AuthClient:
         )
 
         result = self.session.post(
-            url=f"{auth_url}register",
+            url=f"register",
             data={
                 "username": username,
                 "password": password,
