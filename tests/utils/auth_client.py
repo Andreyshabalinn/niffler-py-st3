@@ -69,6 +69,9 @@ class AuthClient:
             )
             print("СЕШН КОДДДД")
             print(self.session.code)
+            print("ЛОГИН")
+            print(username)
+            print(password)
 
             # После логина сервер должен перенаправить с кодом авторизации
             # Предполагаем, что code доступен в self.session.code (или нужно его вытянуть из URL)
@@ -121,6 +124,7 @@ class AuthClient:
             allow_redirects=True
         )
 
+
         result = self.session.post(
             url=f"register",
             data={
@@ -131,4 +135,7 @@ class AuthClient:
             },
             allow_redirects=True
         )
+        print("СТАТУС РЕГИСТРАЦИИ")
+        print(result.status_code)
+        print(result.text)
         return result
