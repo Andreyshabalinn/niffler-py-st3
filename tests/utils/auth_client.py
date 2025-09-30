@@ -71,6 +71,9 @@ class AuthClient:
                 },
                 allow_redirects=True
             )
+            print(result.url)
+            print(result.status_code)
+            print(result.text)
             print("СЕШН КОДДДД")
             print(self.session.code)
             print("ЛОГИН")
