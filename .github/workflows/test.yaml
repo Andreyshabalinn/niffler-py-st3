@@ -9,7 +9,7 @@ env:
   BASE_AUTH_URL: http://auth.niffler.dc:9000/
   API_BASE_URL: http://gateway.niffler.dc:8090/api/
   TEST_LOGIN: asd
-  TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+  TEST_PASSWORD: asd
   DB_URL: postgresql://postgres:secret@localhost:5432/niffler-spend
   USER_DB_URL: postgresql://postgres:secret@localhost:5432/niffler-userdata
   AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
