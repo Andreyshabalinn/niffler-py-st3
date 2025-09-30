@@ -27,7 +27,6 @@ class AuthClient:
         self.session = AuthSession(base_url=auth_url)
         self.redirect_uri = frontend_url + "authorized"
 
-        # Переписать с использованием библиотеки
         self.code_verifier, self.code_challenge = pkce.generate_pkce_pair()
 
         self._basic_token = base64.b64encode(auth_sercet.encode('utf-8')).decode('utf-8')
@@ -58,15 +57,18 @@ class AuthClient:
                 raise RuntimeError("CSRF token not found in cookies")
 
             # Шаг 2: Логинимся, передавая username, password и csrf
-            login_response = self.session.post(
+            self.session.post(
                 url="login",
                 data={
                     "username": username,
                     "password": password,
-                    "_csrf": csrf_token
+                    "_csrf": csrf_token,
+                    "redirect_uri": self.redirect_uri,
                 },
                 allow_redirects=True
             )
+            print("СЕШН КОДДДД")
+            print(self.session.code)
 
             # После логина сервер должен перенаправить с кодом авторизации
             # Предполагаем, что code доступен в self.session.code (или нужно его вытянуть из URL)
