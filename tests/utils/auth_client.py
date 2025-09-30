@@ -57,7 +57,7 @@ class AuthClient:
                 raise RuntimeError("CSRF token not found in cookies")
 
             # Шаг 2: Логинимся, передавая username, password и csrf
-            self.session.post(
+            result = self.session.post(
                 url="login",
                 data={
                     "username": username,
@@ -72,13 +72,14 @@ class AuthClient:
             print("ЛОГИН")
             print(username)
             print(password)
+            print(result.url)
 
             # После логина сервер должен перенаправить с кодом авторизации
             # Предполагаем, что code доступен в self.session.code (или нужно его вытянуть из URL)
 
             if not hasattr(self.session, 'code') or not self.session.code:
                 # Если код не сохранен, пробуем извлечь из последнего URL редиректа
-                last_url = self.session.last_response.url
+                last_url = result.url
                 from urllib.parse import urlparse, parse_qs
                 parsed_url = urlparse(last_url)
                 query_params = parse_qs(parsed_url.query)
