@@ -39,3 +39,4 @@ urllib3==2.5.0
 confluent-kafka
 curlify
 pkce
+jinja2
