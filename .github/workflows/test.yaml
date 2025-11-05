@@ -72,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
-          path: tests/allure-results
+          path: allure-results
 
   generate-report:
     name: Generate & Publish Allure Report
