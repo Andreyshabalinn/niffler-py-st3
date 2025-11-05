@@ -53,7 +53,7 @@ jobs:
         
       - name: Run api tests
         if: always()
-        run: pytest -n 4 -s -v tests/test_api_with_db.py --alluredir=./allure-results
+        run: pytest -n 4 -s -v tests/test_api_with_db.py --alluredir=./allure-results --dist=loadscope -m "not serial"
         continue-on-error: true
 
       - name: Run kafka tests
@@ -81,8 +81,9 @@ jobs:
     needs: build-and-run-tests
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
