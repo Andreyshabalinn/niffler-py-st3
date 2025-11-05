@@ -59,7 +59,6 @@ jobs:
       - name: Run kafka tests
         if: always()
         run: pytest -s -v tests/test_kafka.py --alluredir=./allure-results
-        continue-on-error: true
         
       - name: Run SOAP tests
         if: always()
@@ -75,8 +74,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: tests/allure-report
+          name: allure-results
+          path: tests/allure-results
 
   generate-report:
     name: Generate & Publish Allure Report
