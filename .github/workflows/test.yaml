@@ -1,0 +1,106 @@
+name: Niffler pytest
+
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+env:
+  BASE_URL: http://frontend.niffler.dc/
+  TOKEN: ${{ secrets.TOKEN }}
+  BASE_AUTH_URL: http://auth.niffler.dc:9000/
+  API_BASE_URL: http://gateway.niffler.dc:8090/api/
+  TEST_LOGIN: asd
+  TEST_PASSWORD: asd
+  DB_URL: postgresql://postgres:secret@localhost:5432/niffler-spend
+  USER_DB_URL: postgresql://postgres:secret@localhost:5432/niffler-userdata
+  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+  SERVER_NAME: localhost
+  SOAP_ADDRESS: http://localhost:8089/ws
+  
+jobs:
+  build-and-setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build backends
+        run: |
+          bash docker-compose-dev.sh
+
+      - name: Edit hosts file
+        run: |
+          echo -e "127.0.0.1\tlocalhost\n127.0.0.1\tfrontend.niffler.dc\n127.0.0.1\tauth.niffler.dc\n127.0.0.1\tgateway.niffler.dc\n127.0.0.1\tkafka" | sudo tee -a /etc/hosts
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GITHUB_SHA }}
+          
+      - name: Who listens on 9000?
+        run: |
+          docker ps --format '{{.Names}} -> {{.Ports}}'
+          ss -lntp | grep ':9000' || true
+
+      - name: Probe token endpoint (no redirects)
+        run: |
+          set -e
+          curl -i -sS -X POST "http://auth.niffler.dc:9000/oauth2/token" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            --data "code=FAKE&redirect_uri=http://frontend.niffler.dc/authorized&code_verifier=FAKE&grant_type=authorization_code&client_id=client" \
+            | sed -n '1,25p'
+
+      - name: Auth logs tail
+        run: |
+          docker logs $(docker ps --filter "name=auth" --format "{{.ID}}") --tail=200 || true
+
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r tests/requirements.txt
+        
+      - name: Run parallel tests
+        if: always()
+        run: pytest -s -v tests/test_api_with_db.py --alluredir=./allure-results
+        
+      - name: Load test report history
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: tests/allure-history
+
+      - name: Generate Allure Report
+        if: always()
+        uses: simple-elf/allure-report-action@v1
+        with:
+          allure_results: tests/allure-results
+          allure_history: tests/allure-history
+          allure_report: tests/allure-report
+
+      - name: Upload Allure Report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: tests/allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: tests/allure-history
