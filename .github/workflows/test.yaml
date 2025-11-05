@@ -54,7 +54,6 @@ jobs:
       - name: Run api tests
         if: always()
         run: pytest -s -v tests/test_api_with_db.py --alluredir=./allure-results
-        continue-on-error: true
 
       - name: Run kafka tests
         if: always()
@@ -63,12 +62,10 @@ jobs:
       - name: Run SOAP tests
         if: always()
         run: pytest -s -v tests/test_soap.py --alluredir=./allure-results
-        continue-on-error: true
 
       - name: Run UI tests
         if: always()
         run: pytest -s -v tests/test_auth.py tests/test_main.py tests/test_profile.py --alluredir=./allure-results
-        continue-on-error: true
 
       - name: Upload Allure Report as artifact
         if: always()
