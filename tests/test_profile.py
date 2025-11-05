@@ -54,7 +54,7 @@ class TestsProfileCategory:
         assert profile_page.category_max_length_error.is_visible()
 
     @allure.story("Архивация категории")
-    def test_archive_category(self, page: Page, created_category, profile_page):
+    def test_archive_category(self, page: Page, authenticated_user, created_category, profile_page):
         category_name, _ = created_category
 
         page.goto(f"{base_url}profile")
@@ -66,7 +66,7 @@ class TestsProfileCategory:
         assert profile_page.category_by_name(category_name).is_visible()
 
     @allure.story("Редактирование категории")
-    def test_edit_category(self, page: Page, created_category, profile_page):
+    def test_edit_category(self, page: Page, authenticated_user, created_category, profile_page):
         category_name, category_id = created_category
 
         page.goto(f"{base_url}profile")

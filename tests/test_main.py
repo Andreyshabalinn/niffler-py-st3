@@ -1,9 +1,9 @@
 from playwright.sync_api import Page
 from faker import Faker
 from datetime import date, datetime, timedelta, timezone
-from pages.profile_page import ProfilePage
-from utils.api_controller import create_spending, delete_spending
-from database.spend_db import SpendDb
+from tests.pages.profile_page import ProfilePage
+from tests.utils.api_controller import create_spending, delete_spending
+from tests.database.spend_db import SpendDb
 from tests.config import BASE_URL, DB_URL
 
 import allure
@@ -67,7 +67,7 @@ class TestsCreateSpends:
 @allure.feature("Удаление трат")
 class TestsDeleteSpends:
     @allure.story("Успешное удаление одной траты")
-    def test_delete_spend(self, page: Page, created_spend, spendings_page):
+    def test_delete_spend(self, page: Page, authenticated_user, created_spend, spendings_page):
         today = date.today()
         spend_date = str(today.day)
 
@@ -80,7 +80,7 @@ class TestsDeleteSpends:
         assert row.is_hidden()
 
     @allure.story("Удаление всех трат")
-    def test_delete_all_spends(self, page: Page, created_spend, spendings_page):
+    def test_delete_all_spends(self, page: Page, authenticated_user, created_spend, spendings_page):
         # Удаляем все траты
         spendings_page.delete_all_spending()
 
@@ -91,7 +91,7 @@ class TestsDeleteSpends:
 @allure.feature("Редактированиие трат")
 class TestsEditeSpends:
     @allure.story("Успешное редактирование траты")
-    def test_edit_spend(self, page: Page, created_spend, spendings_page):
+    def test_edit_spend(self, page: Page, authenticated_user, created_spend, spendings_page):
         # Входные данные для создаваемой траты
 
         page.reload()
@@ -118,7 +118,7 @@ class TestsEditeSpends:
         )
 
     @allure.story("Редактирование траты с ошибкой")
-    def test_edit_spend_with_error(self, page: Page, created_spend, spendings_page):
+    def test_edit_spend_with_error(self, page: Page, authenticated_user, created_spend, spendings_page):
         now = datetime.now(timezone.utc)
         spending_date = now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
@@ -155,7 +155,6 @@ class TestsSearchSpends:
         # Создаём траты
         spend_one = created_spend
         spend_two = create_spending(
-            authenticated_user,
             spend_amount,
             another_category,
             another_currency,
@@ -200,7 +199,6 @@ class TestsSearchSpends:
         # Создаём траты
         spend_one = created_spend
         spend_two = create_spending(
-            authenticated_user,
             spend_amount,
             another_category,
             another_currency,
