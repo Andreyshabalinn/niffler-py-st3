@@ -87,6 +87,9 @@ jobs:
       - name: Download Allure results
         uses: actions/download-artifact@v4
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: tests/allure-history
           name: allure-results
           path: ./allure-results
 
@@ -94,11 +97,9 @@ jobs:
         run: |
           npm install -g allure-commandline --save-dev
           allure --version
-
       - name: Generate Allure report
         run: |
           allure generate allure-results --clean -o allure-report
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
