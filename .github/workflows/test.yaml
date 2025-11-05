@@ -95,7 +95,7 @@ jobs:
           publish_branch: gh-pages
           publish_dir: tests/allure-history
           name: allure-results
-          path: ./allure-results
+          path: allure-results
 
       - name: Install Allure CLI
         run: |
@@ -107,7 +107,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./allure-report
+          path: allure-resultss
 
       - name: Deploy to GitHub Pages
         id: deployment
