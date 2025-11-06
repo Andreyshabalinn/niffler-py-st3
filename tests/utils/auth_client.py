@@ -71,15 +71,6 @@ class AuthClient:
                 },
                 allow_redirects=True
             )
-            print(result.url)
-            print(result.status_code)
-            print(result.text)
-            print("СЕШН КОДДДД")
-            print(self.session.code)
-            print("ЛОГИН")
-            print(username)
-            print(password)
-            print(result.url)
 
             # После логина сервер должен перенаправить с кодом авторизации
             # Предполагаем, что code доступен в self.session.code (или нужно его вытянуть из URL)

@@ -21,4 +21,7 @@ AUTH_SECRET = os.getenv("AUTH_SECRET")
 KAFKA_SERVER = os.getenv("SERVER_NAME")
 
 SOAP_ADDRESS = os.getenv("SOAP_ADDRESS")
+
+WIREMOCK_HOST = "localhost:8094"
+CURRENCY_HOST = "localhost:8092"
  
