@@ -11,7 +11,6 @@ def raise_for_status(function):
             if response.status_code == 400:
                 e.add_note(response.text)
                 raise
-        print(response)
         return response
     
     return wrapper
