@@ -3,7 +3,7 @@ from tests.grpc_tests.internal.pb.niffler_currency_pb2 import CalculateRequest, 
 import grpc
 import pytest
 #
-#   Эти тесты запускаем только в параметром --mock
+#   Эти тесты запускаем только с параметром --mock
 #
 
 

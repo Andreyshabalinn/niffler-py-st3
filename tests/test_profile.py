@@ -6,7 +6,7 @@ import allure
 
 
 fake = Faker()
-base_url = BASE_URL
+base_url = cfg.BASE_URL
 
 
 @allure.epic("Страница профиля")
