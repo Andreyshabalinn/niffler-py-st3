@@ -6,6 +6,7 @@ import allure
 import curlify
 from allure_commons.types import AttachmentType
 from requests import Response
+from playwright.sync_api import Page
 
 def allure_logger(config):
     listener = config.pluginmanager.get_plugin("allure_listener")
@@ -73,3 +74,9 @@ def attach_sql(conn, cursor, statement, parameters, context, executemany):
 
     name = f"{statement.split()[0]} {db_name}"
     allure.attach(sql_full, name=name, attachment_type=AttachmentType.TEXT)
+
+_original_goto = Page.goto
+
+def goto_with_allure(self, url, *args, **kwargs):
+    with allure.step(f"Переходим по URL: {url}"):
+        return _original_goto(self, url, *args, **kwargs)
