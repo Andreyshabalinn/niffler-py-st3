@@ -15,12 +15,9 @@ frontend_url = BASE_URL
 
 def auth_with_token():
     try:
-        print("СТАТУС РЕГИСТРАЦИИ")
-        print(username)
-        print(password)
         AuthClient().register(username, password)
     except Exception as e:
-        print("НЕ УДАЛОСЬ ЗАРЕГИСТРИРОВАТЬСЯ")
+        logging.warning("НЕ УДАЛОСЬ ЗАРЕГИСТРИРОВАТЬСЯ")
 
     token = AuthClient().auth(username, password)
     allure.attach(token, name="token.txt", attachment_type=allure.attachment_type.TEXT)
