@@ -15,6 +15,9 @@ cd niffler-py-st3
 # Установить зависимости
 pip install -r tests/requirements.txt
 
+# Для UI тестов установить playwright
+playwright install
+
 # Собрать и запустить систему Niffler
 bash docker-compose-dev.sh
 ```
