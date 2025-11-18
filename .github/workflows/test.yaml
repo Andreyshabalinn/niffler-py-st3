@@ -47,9 +47,12 @@ jobs:
         with:
           python-version: '3.13'
           cache: 'pip'
-
+          
       - name: Install dependencies
         run: pip install -r tests/requirements.txt
+
+      - name: Install playwright
+        run: python -m playwright install --with-deps
         
       - name: Run api tests
         if: always()
@@ -67,7 +70,15 @@ jobs:
       - name: Run GRPC tests
         if: always()
         run: pytest -s -v tests/grpc_tests/test_get_all_currencies.py tests/grpc_tests/test_calculate_rate.py --alluredir=./allure-results
+        
+      - name: Up GRPC mock server
+        if: always()
+        run: docker compose -f "docker-compose.mock.yml" up -d --build
 
+      - name: Waiting
+        if: always()
+        run: sleep 20
+        
       - name: Run GRPC mock tests
         if: always()
         run: pytest -s -v tests/grpc_tests/test_mock_server.py --alluredir=./allure-results --mock
