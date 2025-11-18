@@ -48,11 +48,11 @@ jobs:
           python-version: '3.13'
           cache: 'pip'
           
-      - name: Install playwright
-        run: playwright install
-        
       - name: Install dependencies
         run: pip install -r tests/requirements.txt
+
+      - name: Install playwright
+        run: python -m playwright install --with-deps
         
       - name: Run api tests
         if: always()
