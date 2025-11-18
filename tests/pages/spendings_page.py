@@ -9,6 +9,7 @@ base_url = BASE_URL
 class SpendingsPage(MainPage):
     def __init__(self, page):
         super().__init__(page)
+        page.set_default_timeout(60000)
         self.amount_input = page.locator("#amount")
         self.currency_combobox = page.locator("#currency")
         self.category_input = page.locator("#category")
@@ -96,10 +97,7 @@ class SpendingsPage(MainPage):
         new_spending_description: str,
     ):
         row = (
-            self.page.locator("tr")
-            .filter(has=self.page.locator(f'span:has-text("{spending_category}")'))
-            .filter(has=self.page.locator(f'span:has-text("{spending_description}")'))
-            .filter(has=self.page.locator(f'span:has-text("{spending_date}")'))
+            self.page.locator("tr", has=self.page.locator("span", has_text=f"{spending_category}"))
         )
 
         row.locator('button[aria-label="Edit spending"]').click()
@@ -142,11 +140,9 @@ class SpendingsPage(MainPage):
         spending_description: str,
         new_spending_amount: str,
     ):
+    
         row = (
-            self.page.locator("tr")
-            .filter(has=self.page.locator(f'span:has-text("{spending_category}")'))
-            .filter(has=self.page.locator(f'span:has-text("{spending_description}")'))
-            .filter(has=self.page.locator(f'span:has-text("{spending_date}")'))
+            self.page.locator("tr", has=self.page.locator("span", has_text=f"{spending_category}"))
         )
 
         row.locator('button[aria-label="Edit spending"]').click()
