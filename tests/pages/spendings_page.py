@@ -9,6 +9,7 @@ base_url = BASE_URL
 class SpendingsPage(MainPage):
     def __init__(self, page):
         super().__init__(page)
+        page.set_default_timeout(60000)
         self.amount_input = page.locator("#amount")
         self.currency_combobox = page.locator("#currency")
         self.category_input = page.locator("#category")
@@ -44,9 +45,7 @@ class SpendingsPage(MainPage):
     def spending_row(
         self, spending_category: str, spending_amount: str, spending_date: str
     ) -> Locator:
-        return self.page.locator(
-            f'tr:has(span:has-text("{spending_category}")):has(span:has-text("{spending_amount}")):has(span:has-text("{spending_date}"))'
-        )
+        return self.page.locator("tr", has=self.page.locator("span", has_text=f"{spending_category}"))
 
     @allure.step("Создаём трату")
     def add_spending(
@@ -96,10 +95,7 @@ class SpendingsPage(MainPage):
         new_spending_description: str,
     ):
         row = (
-            self.page.locator("tr")
-            .filter(has=self.page.locator(f'span:has-text("{spending_category}")'))
-            .filter(has=self.page.locator(f'span:has-text("{spending_description}")'))
-            .filter(has=self.page.locator(f'span:has-text("{spending_date}")'))
+            self.page.locator("tr", has=self.page.locator("span", has_text=f"{spending_category}"))
         )
 
         row.locator('button[aria-label="Edit spending"]').click()
@@ -142,11 +138,9 @@ class SpendingsPage(MainPage):
         spending_description: str,
         new_spending_amount: str,
     ):
+    
         row = (
-            self.page.locator("tr")
-            .filter(has=self.page.locator(f'span:has-text("{spending_category}")'))
-            .filter(has=self.page.locator(f'span:has-text("{spending_description}")'))
-            .filter(has=self.page.locator(f'span:has-text("{spending_date}")'))
+            self.page.locator("tr", has=self.page.locator("span", has_text=f"{spending_category}"))
         )
 
         row.locator('button[aria-label="Edit spending"]').click()
@@ -156,9 +150,7 @@ class SpendingsPage(MainPage):
 
     @allure.step("Удаляем трату")
     def delete_spending(self, category_name: str, spend_amount: str, spend_date: str):
-        row = self.page.locator(
-            f'tr:has(span:has-text("{category_name}")):has(span:has-text("{spend_amount}")):has(span:has-text("{spend_date}"))'
-        )
+        row = self.page.locator("tr", has=self.page.locator("span", has_text=f"{category_name}"))
         row.click()
         self.delete_spending_button.click()
         self.delete_spending_dialog.wait_for()

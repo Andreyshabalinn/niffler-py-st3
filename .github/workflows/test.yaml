@@ -54,6 +54,11 @@ jobs:
       - name: Install playwright
         run: python -m playwright install --with-deps
         
+      - name: Run UI tests
+        if: always()
+        run: pytest -s -v tests/test_auth.py tests/test_main.py tests/test_profile.py --alluredir=./allure-results
+        continue-on-error: true
+
       - name: Run api tests
         if: always()
         run: pytest -n 4 -s -v tests/test_api_with_db.py --alluredir=./allure-results --dist=loadscope -m "not serial"
@@ -82,11 +87,6 @@ jobs:
       - name: Run GRPC mock tests
         if: always()
         run: pytest -s -v tests/grpc_tests/test_mock_server.py --alluredir=./allure-results --mock
-
-      - name: Run UI tests
-        if: always()
-        run: pytest -s -v tests/test_auth.py tests/test_main.py tests/test_profile.py --alluredir=./allure-results
-        continue-on-error: true
 
       - name: Upload Allure Report as artifact
         if: always()
