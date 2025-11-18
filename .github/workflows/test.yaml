@@ -47,7 +47,10 @@ jobs:
         with:
           python-version: '3.13'
           cache: 'pip'
-
+          
+      - name: Install playwright
+        run: playwright install
+        
       - name: Install dependencies
         run: pip install -r tests/requirements.txt
         
