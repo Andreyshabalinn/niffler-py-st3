@@ -74,6 +74,10 @@ jobs:
       - name: Up GRPC mock server
         if: always()
         run: docker compose -f "docker-compose.mock.yml" up -d --build
+
+      - name: Waiting
+        if: always()
+        run: sleep 20
         
       - name: Run GRPC mock tests
         if: always()
