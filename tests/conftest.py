@@ -30,23 +30,6 @@ def pytest_configure(config):
         datefmt="%H:%M:%S",
     )
 
-
-# Вынес объявление клиента в api_client.py:
-# client = BaseClient(base_url=base_url, token=auth_with_token())
-
-# @pytest.fixture(scope="session")
-# def session_token():
-#     return auth_with_token()
-
-# @pytest.fixture(scope="function")
-# def api_client(auth_with_token) -> BaseClient:
-#     return BaseClient(base_url=api_url, token=auth_with_token)
-
-# @pytest.fixture(scope="session")
-# def client():
-#     base_url = api_url
-#     return BaseClient(base_url=base_url, token=token)
-
 @pytest.fixture(scope="session")
 def auth_client():
     return AuthClient()
